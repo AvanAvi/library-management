@@ -18,4 +18,8 @@ public class BookService {
     public Book saveBook(Book book) {
         return bookRepository.save(book);
     }
+    
+    public Book findById(Long id) {
+    	return bookRepository.findById(id).orElse(null);
+    }
 }

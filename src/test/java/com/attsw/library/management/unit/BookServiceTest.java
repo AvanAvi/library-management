@@ -45,6 +45,8 @@ class BookServiceTest {
     @Test
     void testFindById() {
         // RED
+
+        Long bookId = 1L;
         Book book = new Book(bookId, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
