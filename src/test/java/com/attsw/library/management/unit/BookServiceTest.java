@@ -79,4 +79,15 @@ class BookServiceTest {
 	    assertEquals("Effective Java", result.get(1).getTitle());
 	    verify(bookRepository).findAll();
 }
+    
+
+    @Test
+    void testDeleteBook() {
+    // RED 
+    	Long bookId = 1L;
+    
+    	bookService.deleteBook(bookId);
+    
+    	verify(bookRepository).deleteById(bookId);
+}
 }
