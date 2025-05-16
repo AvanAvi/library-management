@@ -14,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 @ExtendWith(MockitoExtension.class)
 class BookControllerTest {
 
@@ -44,7 +47,7 @@ class BookControllerTest {
     
     @Test
     void testFindById() {
-        // RED 
+       
         Long bookId = 1L;
         Book book = new Book(bookId, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         
@@ -55,5 +58,22 @@ class BookControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(book, response.getBody());
         verify(bookService).findById(bookId);
+    }
+    
+    @Test
+    void testFindAll() {
+        // RED 
+        Book book1 = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
+        Book book2 = new Book(2L, "Effective Java", "Joshua Bloch", "987654321", 2017, "Programming");
+        List<Book> books = Arrays.asList(book1, book2);
+        
+        when(bookService.findAll()).thenReturn(books);
+        
+        ResponseEntity<List<Book>> response = bookController.findAll();
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(books, response.getBody());
+        assertEquals(2, response.getBody().size());
+        verify(bookService).findAll();
     }
 }
