@@ -1,14 +1,29 @@
 package com.attsw.library.management.entity;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "books")
 public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String author;
+
+    @Column(unique = true, nullable = false)
     private String isbn;
+
+    @Column(name = "published_year")
     private Integer publishedYear;
+
     private String category;
 
-    // constructor
+    // Default constructor
     public Book() {
     }
 
