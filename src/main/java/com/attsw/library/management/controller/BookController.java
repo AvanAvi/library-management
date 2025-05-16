@@ -36,4 +36,10 @@ public class BookController {
         List<Book> books = bookService.findAll();
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+        bookService.deleteBook(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
