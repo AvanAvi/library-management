@@ -27,7 +27,7 @@ class BookServiceTest {
 
     @Test
     void testSaveBook() {
-        // RED 
+        // RED - This test will fail because BookService doesn't exist yet
         Book book = new Book(null, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         Book savedBook = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         
