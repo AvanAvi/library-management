@@ -7,7 +7,7 @@ class BookTest {
 
     @Test
     void testBookConstructor() {
-        // RED - The most basic test: Can we create a Book object?
+        // RED - case 
         Book book = new Book();
         assertNotNull(book);
     }
