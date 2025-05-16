@@ -1,6 +1,9 @@
-package com.attsw.library.management.entity;
+package com.attsw.library.management.unit;
 
 import org.junit.jupiter.api.Test;
+
+import com.attsw.library.management.entity.Book;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BookTest {
