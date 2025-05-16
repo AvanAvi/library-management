@@ -9,6 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -27,7 +29,7 @@ class BookServiceTest {
 
     @Test
     void testSaveBook() {
-        // RED - This test will fail because BookService doesn't exist yet
+        // GREEN 
         Book book = new Book(null, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         Book savedBook = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         
@@ -38,5 +40,20 @@ class BookServiceTest {
         assertNotNull(result.getId());
         assertEquals("Clean Code", result.getTitle());
         verify(bookRepository).save(book);
+    }
+
+    @Test
+    void testFindById() {
+        // RED
+        Book book = new Book(bookId, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
+        
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
+        
+        Book result = bookService.findById(bookId);
+        
+        assertNotNull(result);
+        assertEquals(bookId, result.getId());
+        assertEquals("Clean Code", result.getTitle());
+        verify(bookRepository).findById(bookId);
     }
 }
