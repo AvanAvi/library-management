@@ -7,8 +7,18 @@ class MemberTest {
 
     @Test
     void testMemberCreation() {
-        // RED 
+        // GREEN 
         Member member = new Member();
         assertNotNull(member);
+    }
+
+    @Test
+    void testMemberWithNameAndEmail() {
+        // RED 
+        Member member = new Member(1L, "Avan Avi", "avan.avi@email.com");
+        
+        assertEquals(1L, member.getId());
+        assertEquals("Avan Avi", member.getName());
+        assertEquals("avan.avi@email.com", member.getEmail());
     }
 }
