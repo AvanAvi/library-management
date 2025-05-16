@@ -62,7 +62,7 @@ class BookControllerTest {
     
     @Test
     void testFindAll() {
-        // RED 
+      
         Book book1 = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         Book book2 = new Book(2L, "Effective Java", "Joshua Bloch", "987654321", 2017, "Programming");
         List<Book> books = Arrays.asList(book1, book2);
@@ -75,5 +75,16 @@ class BookControllerTest {
         assertEquals(books, response.getBody());
         assertEquals(2, response.getBody().size());
         verify(bookService).findAll();
+    }
+    
+    @Test
+    void testDeleteBook() {
+        // RED 
+        Long bookId = 1L;
+        
+        ResponseEntity<Void> response = bookController.deleteBook(bookId);
+        
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        verify(bookService).deleteBook(bookId);
     }
 }
