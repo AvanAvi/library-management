@@ -29,7 +29,7 @@ class BookControllerTest {
 
     @Test
     void testSaveBook() {
-        // RED 
+     
         Book book = new Book(null, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         Book savedBook = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         
@@ -40,5 +40,20 @@ class BookControllerTest {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(savedBook, response.getBody());
         verify(bookService).saveBook(book);
+    }
+    
+    @Test
+    void testFindById() {
+        // RED 
+        Long bookId = 1L;
+        Book book = new Book(bookId, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
+        
+        when(bookService.findById(bookId)).thenReturn(book);
+        
+        ResponseEntity<Book> response = bookController.findById(bookId);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(book, response.getBody());
+        verify(bookService).findById(bookId);
     }
 }
