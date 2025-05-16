@@ -1,8 +1,18 @@
 package com.attsw.library.management.entity;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "members")
 public class Member {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(unique = true, nullable = false)
     private String email;
 
     // Default constructor
