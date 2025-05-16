@@ -4,6 +4,7 @@ import com.attsw.library.management.entity.Book;
 import com.attsw.library.management.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class BookService {
@@ -22,4 +23,8 @@ public class BookService {
     public Book findById(Long id) {
     	return bookRepository.findById(id).orElse(null);
     }
+    
+    public List<Book> findAll() {
+        return bookRepository.findAll();
+}
 }
