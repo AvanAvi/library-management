@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-
+import java.util.List;
 
 @RestController
 @RequestMapping("/books")
@@ -30,5 +29,11 @@ public class BookController {
     public ResponseEntity<Book> findById(@PathVariable Long id) {
         Book book = bookService.findById(id);
         return new ResponseEntity<>(book, HttpStatus.OK);
+    }
+    
+    @GetMapping
+    public ResponseEntity<List<Book>> findAll() {
+        List<Book> books = bookService.findAll();
+        return new ResponseEntity<>(books, HttpStatus.OK);
     }
 }
