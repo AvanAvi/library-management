@@ -23,4 +23,10 @@ public class BookController {
         Book savedBook = bookService.saveBook(book);
         return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
     }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Book> findById(@PathVariable Long id) {
+        Book book = bookService.findById(id);
+        return new ResponseEntity<>(book, HttpStatus.OK);
+    }
 }
