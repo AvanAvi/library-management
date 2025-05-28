@@ -4,6 +4,7 @@ import com.attsw.library.management.entity.Member;
 import com.attsw.library.management.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class MemberService {
@@ -21,5 +22,9 @@ public class MemberService {
     
     public Member findById(Long id) {
     	return memberRepository.findById(id).orElse(null);
+    }
+    
+    public List<Member> findAll() {
+        return memberRepository.findAll();
     }
 }
