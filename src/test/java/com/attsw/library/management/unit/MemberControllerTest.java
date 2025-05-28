@@ -29,7 +29,7 @@ class MemberControllerTest {
 
     @Test
     void testSaveMember() {
-        // RED 
+        
         Member member = new Member(null, "Avan Avi", "avan.avi@email.com");
         Member savedMember = new Member(1L, "Avan Avi", "avan.avi@email.com");
         
@@ -41,4 +41,20 @@ class MemberControllerTest {
         assertEquals(savedMember, response.getBody());
         verify(memberService).saveMember(member);
     }
+    
+
+@Test
+void testFindById() {
+    // RED 
+    Long memberId = 1L;
+    Member member = new Member(memberId, "Avan Avi", "avan.avi@email.com");
+    
+    when(memberService.findById(memberId)).thenReturn(member);
+    
+    ResponseEntity<Member> response = memberController.findById(memberId);
+    
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals(member, response.getBody());
+    verify(memberService).findById(memberId);
+}
 }
