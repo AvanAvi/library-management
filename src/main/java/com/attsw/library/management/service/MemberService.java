@@ -27,4 +27,9 @@ public class MemberService {
     public List<Member> findAll() {
         return memberRepository.findAll();
     }
+    
+    public void deleteMember(Long id) {
+        memberRepository.deleteById(id);
+    }
+    
 }
