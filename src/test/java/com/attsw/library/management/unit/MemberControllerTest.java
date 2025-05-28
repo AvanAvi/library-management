@@ -62,7 +62,7 @@ class MemberControllerTest {
 	
 	@Test
 	void testFindAll() {
-	    // RED 
+	  
 	    Member member1 = new Member(1L, "Avan Avi", "avan.avi@email.com");
 	    Member member2 = new Member(2L, "John Doe", "john.doe@email.com");
 	    List<Member> members = Arrays.asList(member1, member2);
@@ -75,6 +75,17 @@ class MemberControllerTest {
 	    assertEquals(members, response.getBody());
 	    assertEquals(2, response.getBody().size());
 	    verify(memberService).findAll();
+	}
+	
+	@Test
+	void testDeleteMember() {
+	    // RED 
+	    Long memberId = 1L;
+	    
+	    ResponseEntity<Void> response = memberController.deleteMember(memberId);
+	    
+	    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+	    verify(memberService).deleteMember(memberId);
 	}
 
 
