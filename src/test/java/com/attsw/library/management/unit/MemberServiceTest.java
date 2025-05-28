@@ -9,7 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
-
+import java.util.Arrays;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -44,7 +45,7 @@ class MemberServiceTest {
     
     @Test
     void testFindById() {
-        // RED 
+       
         Long memberId = 1L;
         Member member = new Member(memberId, "Avan Avi", "avan.avi@email.com");
         
@@ -58,4 +59,23 @@ class MemberServiceTest {
         assertEquals("avan.avi@email.com", result.getEmail());
         verify(memberRepository).findById(memberId);
     }
+    
+
+	@Test
+	void testFindAll() {
+	    // RED 
+	    Member member1 = new Member(1L, "Avan Avi", "avan.avi@email.com");
+	    Member member2 = new Member(2L, "John Doe", "john.doe@email.com");
+	    List<Member> members = Arrays.asList(member1, member2);
+	    
+	    when(memberRepository.findAll()).thenReturn(members);
+	    
+	    List<Member> result = memberService.findAll();
+	    
+	    assertNotNull(result);
+	    assertEquals(2, result.size());
+	    assertEquals("Avan Avi", result.get(0).getName());
+	    assertEquals("John Doe", result.get(1).getName());
+	    verify(memberRepository).findAll();
+	}
 }
