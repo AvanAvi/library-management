@@ -63,7 +63,7 @@ class MemberServiceTest {
 
 	@Test
 	void testFindAll() {
-	    // RED 
+	   
 	    Member member1 = new Member(1L, "Avan Avi", "avan.avi@email.com");
 	    Member member2 = new Member(2L, "John Doe", "john.doe@email.com");
 	    List<Member> members = Arrays.asList(member1, member2);
@@ -77,5 +77,15 @@ class MemberServiceTest {
 	    assertEquals("Avan Avi", result.get(0).getName());
 	    assertEquals("John Doe", result.get(1).getName());
 	    verify(memberRepository).findAll();
+	}
+	
+	@Test
+	void testDeleteMember() {
+	    // RED 
+	    Long memberId = 1L;
+	    
+	    memberService.deleteMember(memberId);
+	    
+	    verify(memberRepository).deleteById(memberId);
 	}
 }
