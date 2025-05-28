@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -43,18 +45,37 @@ class MemberControllerTest {
     }
     
 
-@Test
-void testFindById() {
-    // RED 
-    Long memberId = 1L;
-    Member member = new Member(memberId, "Avan Avi", "avan.avi@email.com");
-    
-    when(memberService.findById(memberId)).thenReturn(member);
-    
-    ResponseEntity<Member> response = memberController.findById(memberId);
-    
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(member, response.getBody());
-    verify(memberService).findById(memberId);
-}
+	@Test
+	void testFindById() {
+	    
+	    Long memberId = 1L;
+	    Member member = new Member(memberId, "Avan Avi", "avan.avi@email.com");
+	    
+	    when(memberService.findById(memberId)).thenReturn(member);
+	    
+	    ResponseEntity<Member> response = memberController.findById(memberId);
+	    
+	    assertEquals(HttpStatus.OK, response.getStatusCode());
+	    assertEquals(member, response.getBody());
+	    verify(memberService).findById(memberId);
+	}
+	
+	@Test
+	void testFindAll() {
+	    // RED 
+	    Member member1 = new Member(1L, "Avan Avi", "avan.avi@email.com");
+	    Member member2 = new Member(2L, "John Doe", "john.doe@email.com");
+	    List<Member> members = Arrays.asList(member1, member2);
+	    
+	    when(memberService.findAll()).thenReturn(members);
+	    
+	    ResponseEntity<List<Member>> response = memberController.findAll();
+	    
+	    assertEquals(HttpStatus.OK, response.getStatusCode());
+	    assertEquals(members, response.getBody());
+	    assertEquals(2, response.getBody().size());
+	    verify(memberService).findAll();
+	}
+
+
 }
