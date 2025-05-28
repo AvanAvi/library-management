@@ -23,4 +23,10 @@ public class MemberController {
         Member savedMember = memberService.saveMember(member);
         return new ResponseEntity<>(savedMember, HttpStatus.CREATED);
     }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Member> findById(@PathVariable Long id) {
+        Member member = memberService.findById(id);
+        return new ResponseEntity<>(member, HttpStatus.OK);
+    }
 }
