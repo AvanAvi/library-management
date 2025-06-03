@@ -1,6 +1,8 @@
 package com.attsw.library.management.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "books")
@@ -9,12 +11,15 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Title is required")
     @Column(nullable = false)
     private String title;
 
+    @NotBlank(message = "Author is required")
     @Column(nullable = false)
     private String author;
 
+    @NotBlank(message = "ISBN is required")
     @Column(unique = true, nullable = false)
     private String isbn;
 
