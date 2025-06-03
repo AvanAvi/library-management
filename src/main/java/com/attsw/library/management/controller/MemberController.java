@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,7 +21,7 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResponseEntity<Member> saveMember(@RequestBody Member member) {
+    public ResponseEntity<Member> saveMember(@Valid @RequestBody Member member) {
         Member savedMember = memberService.saveMember(member);
         return new ResponseEntity<>(savedMember, HttpStatus.CREATED);
     }
