@@ -27,8 +27,12 @@ public class BookController {
     
     @GetMapping("/{id}")
     public ResponseEntity<Book> findById(@PathVariable Long id) {
-        Book book = bookService.findById(id);
-        return new ResponseEntity<>(book, HttpStatus.OK);
+        try {
+            Book book = bookService.findById(id);
+            return new ResponseEntity<>(book, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
     
     @GetMapping
