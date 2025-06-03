@@ -21,7 +21,8 @@ public class MemberService {
     }
     
     public Member findById(Long id) {
-    	return memberRepository.findById(id).orElse(null);
+        return memberRepository.findById(id).orElseThrow(() -> 
+            new RuntimeException("Member not found with id: " + id));
     }
     
     public List<Member> findAll() {

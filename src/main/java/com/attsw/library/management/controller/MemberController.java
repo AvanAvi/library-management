@@ -27,8 +27,12 @@ public class MemberController {
     
     @GetMapping("/{id}")
     public ResponseEntity<Member> findById(@PathVariable Long id) {
-        Member member = memberService.findById(id);
-        return new ResponseEntity<>(member, HttpStatus.OK);
+        try {
+            Member member = memberService.findById(id);
+            return new ResponseEntity<>(member, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
     
     @GetMapping
