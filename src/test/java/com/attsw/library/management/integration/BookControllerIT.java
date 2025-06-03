@@ -20,7 +20,7 @@ class BookControllerIT {
 
     @Test
     void testCreateBookEndpoint() {
-        // INTEGRATION VALIDATION
+        // INTEGRATION VALIDATION - Tests existing POST /books functionality
         Book bookToCreate = new Book(null, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         
         ResponseEntity<Book> response = restTemplate.postForEntity("/books", bookToCreate, Book.class);
@@ -39,7 +39,7 @@ class BookControllerIT {
 
     @Test
     void testGetBookByIdEndpoint() {
-        // INTEGRATION VALIDATION
+        // INTEGRATION VALIDATION - Tests existing GET /books/{id} functionality
         Book bookToCreate = new Book(null, "Effective Java", "Joshua Bloch", "987654321", 2017, "Programming");
         ResponseEntity<Book> createResponse = restTemplate.postForEntity("/books", bookToCreate, Book.class);
         Long bookId = createResponse.getBody().getId();
@@ -59,9 +59,66 @@ class BookControllerIT {
 
     @Test
     void testGetBookByIdWhenNotFound() {
-        
+        // INTEGRATION VALIDATION - Tests existing 404 error handling
+       
         ResponseEntity<Book> response = restTemplate.getForEntity("/books/999", Book.class);
         
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void testGetAllBooksEndpoint() {
+        // INTEGRATION VALIDATION - Tests existing GET /books functionality
+        // Create multiple books 
+        Book book1 = new Book(null, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
+        Book book2 = new Book(null, "Effective Java", "Joshua Bloch", "987654321", 2017, "Programming");
+        
+        restTemplate.postForEntity("/books", book1, Book.class);
+        restTemplate.postForEntity("/books", book2, Book.class);
+        
+        // Test GET all books
+        ResponseEntity<Book[]> response = restTemplate.getForEntity("/books", Book[].class);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Book[] books = response.getBody();
+        assertNotNull(books);
+        assertEquals(2, books.length);
+        
+        // Verify both books are returned 
+        boolean foundCleanCode = false;
+        boolean foundEffectiveJava = false;
+        for (Book book : books) {
+            if ("Clean Code".equals(book.getTitle())) {
+                foundCleanCode = true;
+                assertEquals("Robert Martin", book.getAuthor());
+                assertEquals("123456789", book.getIsbn());
+            } else if ("Effective Java".equals(book.getTitle())) {
+                foundEffectiveJava = true;
+                assertEquals("Joshua Bloch", book.getAuthor());
+                assertEquals("987654321", book.getIsbn());
+            }
+        }
+        assertTrue(foundCleanCode, "Clean Code book should be found");
+        assertTrue(foundEffectiveJava, "Effective Java book should be found");
+    }
+
+    @Test
+    void testDeleteBookEndpoint() {
+        // INTEGRATION VALIDATION - Tests existing DELETE /books/{id} functionality
+        // Create a book first
+        Book bookToCreate = new Book(null, "Test Book", "Test Author", "111111111", 2023, "Test");
+        ResponseEntity<Book> createResponse = restTemplate.postForEntity("/books", bookToCreate, Book.class);
+        Long bookId = createResponse.getBody().getId();
+        
+        // Verify book exists
+        ResponseEntity<Book> getResponse = restTemplate.getForEntity("/books/" + bookId, Book.class);
+        assertEquals(HttpStatus.OK, getResponse.getStatusCode());
+        
+        // Delete the book
+        restTemplate.delete("/books/" + bookId);
+        
+        // Verify book is deleted (should return 404)
+        ResponseEntity<Book> getDeletedResponse = restTemplate.getForEntity("/books/" + bookId, Book.class);
+        assertEquals(HttpStatus.NOT_FOUND, getDeletedResponse.getStatusCode());
     }
 }
