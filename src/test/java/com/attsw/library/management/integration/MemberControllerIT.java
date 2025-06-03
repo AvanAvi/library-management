@@ -20,7 +20,7 @@ class MemberControllerIT {
 
     @Test
     void testCreateMemberEndpoint() {
-        // INTEGRATION VALIDATION - Tests existing working functionality
+        // INTEGRATION VALIDATION - Tests existing POST /members functionality
         Member memberToCreate = new Member(null, "Avan Avi", "avan.avi@email.com");
         
         ResponseEntity<Member> response = restTemplate.postForEntity("/members", memberToCreate, Member.class);
@@ -36,7 +36,7 @@ class MemberControllerIT {
 
     @Test
     void testGetMemberByIdEndpoint() {
-        // INTEGRATION VALIDATION - Tests existing working functionality
+        // INTEGRATION VALIDATION - Tests existing GET /members/{id} functionality
         Member memberToCreate = new Member(null, "John Doe", "john.doe@email.com");
         ResponseEntity<Member> createResponse = restTemplate.postForEntity("/members", memberToCreate, Member.class);
         Long memberId = createResponse.getBody().getId();
@@ -53,11 +53,68 @@ class MemberControllerIT {
 
     @Test
     void testGetMemberByIdWhenNotFound() {
-        //  RED -  FAIL because MemberService returns null
-        //  MemberController returns 200 OK with null body 
+        // INTEGRATION VALIDATION - Tests existing 404 error handling
+        // 404 handling is already implemented and working consistently with Book API
         ResponseEntity<Member> response = restTemplate.getForEntity("/members/999", Member.class);
         
-        // Assertion FAIL - code returns 200 OK with null body
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void testGetAllMembersEndpoint() {
+        // RED 
+        
+        
+        // Create multiple members first
+        Member member1 = new Member(null, "Avan Avi", "avan.avi@email.com");
+        Member member2 = new Member(null, "John Doe", "john.doe@email.com");
+        
+        restTemplate.postForEntity("/members", member1, Member.class);
+        restTemplate.postForEntity("/members", member2, Member.class);
+        
+        // Test GET all members 
+        ResponseEntity<Member[]> response = restTemplate.getForEntity("/members", Member[].class);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Member[] members = response.getBody();
+        assertNotNull(members);
+        assertEquals(2, members.length);
+        
+        // Verify both members are returned 
+        boolean foundAvan = false;
+        boolean foundJohn = false;
+        for (Member member : members) {
+            if ("Avan Avi".equals(member.getName())) {
+                foundAvan = true;
+                assertEquals("avan.avi@email.com", member.getEmail());
+            } else if ("John Doe".equals(member.getName())) {
+                foundJohn = true;
+                assertEquals("john.doe@email.com", member.getEmail());
+            }
+        }
+        assertTrue(foundAvan, "Avan Avi member should be found");
+        assertTrue(foundJohn, "John Doe member should be found");
+    }
+
+    @Test
+    void testDeleteMemberEndpoint() {
+        // RED
+        
+        
+        // Create a member first
+        Member memberToCreate = new Member(null, "Test Member", "test@email.com");
+        ResponseEntity<Member> createResponse = restTemplate.postForEntity("/members", memberToCreate, Member.class);
+        Long memberId = createResponse.getBody().getId();
+        
+        // Verify member exists
+        ResponseEntity<Member> getResponse = restTemplate.getForEntity("/members/" + memberId, Member.class);
+        assertEquals(HttpStatus.OK, getResponse.getStatusCode());
+        
+        // Delete the member 
+        restTemplate.delete("/members/" + memberId);
+        
+        // Verify member is deleted (should return 404)
+        ResponseEntity<Member> getDeletedResponse = restTemplate.getForEntity("/members/" + memberId, Member.class);
+        assertEquals(HttpStatus.NOT_FOUND, getDeletedResponse.getStatusCode());
     }
 }
