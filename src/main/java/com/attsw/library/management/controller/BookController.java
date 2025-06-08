@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
+import com.attsw.library.management.exception.BookNotFoundException;
 
 @RestController
 @RequestMapping("/books")
@@ -31,7 +32,7 @@ public class BookController {
         try {
             Book book = bookService.findById(id);
             return new ResponseEntity<>(book, HttpStatus.OK);
-        } catch (RuntimeException e) {
+        } catch (BookNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

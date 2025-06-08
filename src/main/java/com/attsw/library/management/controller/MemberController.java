@@ -2,6 +2,7 @@ package com.attsw.library.management.controller;
 
 import com.attsw.library.management.entity.Member;
 import com.attsw.library.management.service.MemberService;
+import com.attsw.library.management.exception.MemberNotFoundException; // ← ADD THIS IMPORT
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class MemberController {
         try {
             Member member = memberService.findById(id);
             return new ResponseEntity<>(member, HttpStatus.OK);
-        } catch (RuntimeException e) {
+        } catch (MemberNotFoundException e) { 
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

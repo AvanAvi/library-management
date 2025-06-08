@@ -5,6 +5,7 @@ import com.attsw.library.management.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import com.attsw.library.management.exception.MemberNotFoundException;
 
 @Service
 public class MemberService {
@@ -22,7 +23,7 @@ public class MemberService {
     
     public Member findById(Long id) {
         return memberRepository.findById(id).orElseThrow(() -> 
-            new RuntimeException("Member not found with id: " + id));
+          new MemberNotFoundException("Member not found with id: " + id));
     }
     
     public List<Member> findAll() {

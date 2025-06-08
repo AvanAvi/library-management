@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import com.attsw.library.management.exception.BookNotFoundException;
 
 import java.util.Optional;
 import java.util.Arrays;
@@ -98,7 +99,7 @@ class BookServiceTest {
         
         when(bookRepository.findById(nonExistentId)).thenReturn(Optional.empty());
         
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        BookNotFoundException exception = assertThrows(BookNotFoundException.class, () -> {
             bookService.findById(nonExistentId);
         });
         

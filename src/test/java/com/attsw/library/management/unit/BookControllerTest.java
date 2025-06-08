@@ -3,6 +3,7 @@ package com.attsw.library.management.unit;
 import com.attsw.library.management.controller.BookController;
 import com.attsw.library.management.entity.Book;
 import com.attsw.library.management.service.BookService;
+import com.attsw.library.management.exception.BookNotFoundException; 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +33,6 @@ class BookControllerTest {
 
     @Test
     void testSaveBook() {
-     
         Book book = new Book(null, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         Book savedBook = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         
@@ -47,7 +47,6 @@ class BookControllerTest {
     
     @Test
     void testFindById() {
-       
         Long bookId = 1L;
         Book book = new Book(bookId, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         
@@ -62,7 +61,6 @@ class BookControllerTest {
     
     @Test
     void testFindAll() {
-      
         Book book1 = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         Book book2 = new Book(2L, "Effective Java", "Joshua Bloch", "987654321", 2017, "Programming");
         List<Book> books = Arrays.asList(book1, book2);
@@ -79,7 +77,6 @@ class BookControllerTest {
     
     @Test
     void testDeleteBook() {
-    
         Long bookId = 1L;
         
         ResponseEntity<Void> response = bookController.deleteBook(bookId);
@@ -90,14 +87,13 @@ class BookControllerTest {
     
     @Test
     void testFindByIdWhenNotFound() {
-      
         Long nonExistentId = 999L;
         
-        // Mock service to throw RuntimeException (simulating book not found)
+        // Mock service to throw BookNotFoundException (specific custom exception)
         when(bookService.findById(nonExistentId))
-            .thenThrow(new RuntimeException("Book not found with id: " + nonExistentId));
+            .thenThrow(new BookNotFoundException("Book not found with id: " + nonExistentId)); // ← CHANGED
         
-                ResponseEntity<Book> response = bookController.findById(nonExistentId);
+        ResponseEntity<Book> response = bookController.findById(nonExistentId);
         
         // Assert - Verify exception handling
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());

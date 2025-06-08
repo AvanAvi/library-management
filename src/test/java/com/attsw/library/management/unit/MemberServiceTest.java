@@ -3,6 +3,7 @@ package com.attsw.library.management.unit;
 import com.attsw.library.management.entity.Member;
 import com.attsw.library.management.repository.MemberRepository;
 import com.attsw.library.management.service.MemberService;
+import com.attsw.library.management.exception.MemberNotFoundException; 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +30,6 @@ class MemberServiceTest {
 
     @Test
     void testSaveMember() {
-        
         Member member = new Member(null, "Avan Avi", "avan.avi@email.com");
         Member savedMember = new Member(1L, "Avan Avi", "avan.avi@email.com");
         
@@ -45,7 +45,6 @@ class MemberServiceTest {
     
     @Test
     void testFindById() {
-       
         Long memberId = 1L;
         Member member = new Member(memberId, "Avan Avi", "avan.avi@email.com");
         
@@ -59,48 +58,44 @@ class MemberServiceTest {
         assertEquals("avan.avi@email.com", result.getEmail());
         verify(memberRepository).findById(memberId);
     }
-    
 
-	@Test
-	void testFindAll() {
-	   
-	    Member member1 = new Member(1L, "Avan Avi", "avan.avi@email.com");
-	    Member member2 = new Member(2L, "John Doe", "john.doe@email.com");
-	    List<Member> members = Arrays.asList(member1, member2);
-	    
-	    when(memberRepository.findAll()).thenReturn(members);
-	    
-	    List<Member> result = memberService.findAll();
-	    
-	    assertNotNull(result);
-	    assertEquals(2, result.size());
-	    assertEquals("Avan Avi", result.get(0).getName());
-	    assertEquals("John Doe", result.get(1).getName());
-	    verify(memberRepository).findAll();
-	}
-	
-	@Test
-	void testDeleteMember() {
-	    // RED 
-	    Long memberId = 1L;
-	    
-	    memberService.deleteMember(memberId);
-	    
-	    verify(memberRepository).deleteById(memberId);
-	}
-	
-	@Test
-	void testFindByIdThrowsExceptionWhenNotFound() {
-	    
-	    Long nonExistentId = 999L;
-	    
-	    when(memberRepository.findById(nonExistentId)).thenReturn(Optional.empty());
-	    
-	    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-	        memberService.findById(nonExistentId);
-	    });
-	    
-	    assertEquals("Member not found with id: " + nonExistentId, exception.getMessage());
-	    verify(memberRepository).findById(nonExistentId);
-	}
+    @Test
+    void testFindAll() {
+        Member member1 = new Member(1L, "Avan Avi", "avan.avi@email.com");
+        Member member2 = new Member(2L, "John Doe", "john.doe@email.com");
+        List<Member> members = Arrays.asList(member1, member2);
+        
+        when(memberRepository.findAll()).thenReturn(members);
+        
+        List<Member> result = memberService.findAll();
+        
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("Avan Avi", result.get(0).getName());
+        assertEquals("John Doe", result.get(1).getName());
+        verify(memberRepository).findAll();
+    }
+    
+    @Test
+    void testDeleteMember() {
+        Long memberId = 1L;
+        
+        memberService.deleteMember(memberId);
+        
+        verify(memberRepository).deleteById(memberId);
+    }
+    
+    @Test
+    void testFindByIdThrowsExceptionWhenNotFound() {
+        Long nonExistentId = 999L;
+        
+        when(memberRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+        
+        MemberNotFoundException exception = assertThrows(MemberNotFoundException.class, () -> { // ← CHANGED
+            memberService.findById(nonExistentId);
+        });
+        
+        assertEquals("Member not found with id: " + nonExistentId, exception.getMessage());
+        verify(memberRepository).findById(nonExistentId);
+    }
 }

@@ -5,6 +5,7 @@ import com.attsw.library.management.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import com.attsw.library.management.exception.BookNotFoundException;
 
 @Service
 public class BookService {
@@ -22,13 +23,12 @@ public class BookService {
     
     public Book findById(Long id) {
         return bookRepository.findById(id).orElseThrow(() -> 
-            new RuntimeException("Book not found with id: " + id));
+          new BookNotFoundException("Book not found with id: " + id));
     }
     
     public List<Book> findAll() {
         return bookRepository.findAll();
     }
-    
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
     }
