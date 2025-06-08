@@ -79,12 +79,29 @@ class BookControllerTest {
     
     @Test
     void testDeleteBook() {
-        // RED 
+    
         Long bookId = 1L;
         
         ResponseEntity<Void> response = bookController.deleteBook(bookId);
         
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         verify(bookService).deleteBook(bookId);
+    }
+    
+    @Test
+    void testFindByIdWhenNotFound() {
+      
+        Long nonExistentId = 999L;
+        
+        // Mock service to throw RuntimeException (simulating book not found)
+        when(bookService.findById(nonExistentId))
+            .thenThrow(new RuntimeException("Book not found with id: " + nonExistentId));
+        
+                ResponseEntity<Book> response = bookController.findById(nonExistentId);
+        
+        // Assert - Verify exception handling
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+        verify(bookService).findById(nonExistentId);
     }
 }

@@ -88,4 +88,19 @@ class MemberServiceTest {
 	    
 	    verify(memberRepository).deleteById(memberId);
 	}
+	
+	@Test
+	void testFindByIdThrowsExceptionWhenNotFound() {
+	    
+	    Long nonExistentId = 999L;
+	    
+	    when(memberRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+	    
+	    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+	        memberService.findById(nonExistentId);
+	    });
+	    
+	    assertEquals("Member not found with id: " + nonExistentId, exception.getMessage());
+	    verify(memberRepository).findById(nonExistentId);
+	}
 }

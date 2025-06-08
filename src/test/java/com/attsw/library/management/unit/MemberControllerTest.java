@@ -87,6 +87,24 @@ class MemberControllerTest {
 	    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 	    verify(memberService).deleteMember(memberId);
 	}
+	
+	@Test
+	void testFindByIdWhenNotFound() {
+	    
+	    Long nonExistentId = 999L;
+	    
+	    
+	    when(memberService.findById(nonExistentId))
+	        .thenThrow(new RuntimeException("Member not found with id: " + nonExistentId));
+	    
+
+	    ResponseEntity<Member> response = memberController.findById(nonExistentId);
+	    
+	    // Assert - Verify exception handling
+	    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+	    assertNull(response.getBody());
+	    verify(memberService).findById(nonExistentId);
+	}
 
 
 }

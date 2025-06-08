@@ -90,4 +90,19 @@ class BookServiceTest {
     
     	verify(bookRepository).deleteById(bookId);
 }
+    
+    @Test
+    void testFindByIdThrowsExceptionWhenNotFound() {
+       
+        Long nonExistentId = 999L;
+        
+        when(bookRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+        
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            bookService.findById(nonExistentId);
+        });
+        
+        assertEquals("Book not found with id: " + nonExistentId, exception.getMessage());
+        verify(bookRepository).findById(nonExistentId);
+    }
 }
