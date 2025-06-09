@@ -42,6 +42,25 @@ public class MemberHTMLController {
         // Return add member form view
         return "add-member";
     }
+    
+    @PostMapping("/members-web")
+    public String saveMember(@ModelAttribute Member member) {
+        // Save member using service
+        memberService.saveMember(member);
+        
+        // Redirect to members list (POST-Redirect-GET pattern)
+        return "redirect:/members-web";
+    }
+    
+    @PostMapping("/members-web/delete/{id}")
+    public String deleteMember(@PathVariable Long id) {
+        // Delete member using service
+        memberService.deleteMember(id);
+        
+        // Redirect to members list
+        return "redirect:/members-web";
+    }
+
 
     
 }
