@@ -56,6 +56,28 @@
 			<optional>true</optional>
 		</dependency>
 		
+		<!-- Selenium WebDriver -->
+		<dependency>
+		    <groupId>org.seleniumhq.selenium</groupId>
+		    <artifactId>selenium-java</artifactId>
+		    <scope>test</scope>
+		</dependency>
+		
+		<!-- Testcontainers Selenium -->
+		<dependency>
+		    <groupId>org.testcontainers</groupId>
+		    <artifactId>selenium</artifactId>
+		    <scope>test</scope>
+		</dependency>
+		
+		<!-- WebDriverManager (auto-download drivers) -->
+		<dependency>
+		    <groupId>io.github.bonigarcia</groupId>
+		    <artifactId>webdrivermanager</artifactId>
+		    <version>5.3.2</version>
+		    <scope>test</scope>
+		</dependency>
+		
 		<!-- Database Dependencies -->
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -141,6 +163,7 @@
 					<excludes>
 						<exclude>**/integration/**</exclude>
 						<exclude>**/e2e/**</exclude>
+						<exclude>**/ui/**</exclude> 
 					</excludes>
 				</configuration>
 			</plugin>
@@ -173,6 +196,18 @@
 								<include>**/e2e/**/*E2E.java</include>
 							</includes>
 						</configuration>
+					</execution>
+					<execution>
+					    <id>ui-tests</id>
+					    <goals>
+					        <goal>integration-test</goal>
+					        <goal>verify</goal>
+					    </goals>
+					    <configuration>
+					        <includes>
+					            <include>**/ui/**/*UITest.java</include>
+					        </includes>
+					    </configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -229,6 +264,7 @@
 					</targetTests>
 					<excludedTestClasses>
 						<param>com.attsw.library.management.e2e.*</param>
+						<param>com.attsw.library.management.ui.*</param> 
 					</excludedTestClasses>
 					<mutators>
 						<mutator>DEFAULTS</mutator>
