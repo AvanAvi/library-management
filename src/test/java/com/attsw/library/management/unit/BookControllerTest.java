@@ -89,9 +89,9 @@ class BookControllerTest {
     void testFindByIdWhenNotFound() {
         Long nonExistentId = 999L;
         
-        // Mock service to throw BookNotFoundException (specific custom exception)
+        // Mock service to throw BookNotFoundException
         when(bookService.findById(nonExistentId))
-            .thenThrow(new BookNotFoundException("Book not found with id: " + nonExistentId)); // ← CHANGED
+            .thenThrow(new BookNotFoundException("Book not found with id: " + nonExistentId)); 
         
         ResponseEntity<Book> response = bookController.findById(nonExistentId);
         

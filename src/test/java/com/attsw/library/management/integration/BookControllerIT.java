@@ -8,19 +8,29 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@Testcontainers  
 class BookControllerIT {
+
+    @Container  
+    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")  
+            .withDatabaseName("testdb")
+            .withUsername("test")
+            .withPassword("test");
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Test
     void testCreateBookEndpoint() {
-        // INTEGRATION VALIDATION - Tests existing POST /books functionality
+        // INTEGRATION VALIDATION 
         Book bookToCreate = new Book(null, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         
         ResponseEntity<Book> response = restTemplate.postForEntity("/books", bookToCreate, Book.class);
@@ -39,7 +49,7 @@ class BookControllerIT {
 
     @Test
     void testGetBookByIdEndpoint() {
-        // INTEGRATION VALIDATION - Tests existing GET /books/{id} functionality
+        // INTEGRATION VALIDATION 
         Book bookToCreate = new Book(null, "Effective Java", "Joshua Bloch", "987654321", 2017, "Programming");
         ResponseEntity<Book> createResponse = restTemplate.postForEntity("/books", bookToCreate, Book.class);
         Long bookId = createResponse.getBody().getId();
@@ -59,8 +69,7 @@ class BookControllerIT {
 
     @Test
     void testGetBookByIdWhenNotFound() {
-        // INTEGRATION VALIDATION - Tests existing 404 error handling
-       
+        // INTEGRATION VALIDATION 
         ResponseEntity<Book> response = restTemplate.getForEntity("/books/999", Book.class);
         
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -68,7 +77,7 @@ class BookControllerIT {
 
     @Test
     void testGetAllBooksEndpoint() {
-        // INTEGRATION VALIDATION - Tests existing GET /books functionality
+        // INTEGRATION VALIDATION 
         // Create multiple books 
         Book book1 = new Book(null, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         Book book2 = new Book(null, "Effective Java", "Joshua Bloch", "987654321", 2017, "Programming");
@@ -104,8 +113,8 @@ class BookControllerIT {
 
     @Test
     void testDeleteBookEndpoint() {
-        // INTEGRATION VALIDATION - Tests existing DELETE /books/{id} functionality
-        // Create a book first
+        // INTEGRATION VALIDATION 
+        // Create a book
         Book bookToCreate = new Book(null, "Test Book", "Test Author", "111111111", 2023, "Test");
         ResponseEntity<Book> createResponse = restTemplate.postForEntity("/books", bookToCreate, Book.class);
         Long bookId = createResponse.getBody().getId();

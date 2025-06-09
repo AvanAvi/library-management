@@ -8,19 +8,29 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@Testcontainers  
 class MemberControllerIT {
+
+    @Container  
+    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")  
+            .withDatabaseName("testdb")
+            .withUsername("test")
+            .withPassword("test");
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Test
     void testCreateMemberEndpoint() {
-        // INTEGRATION VALIDATION - Tests existing POST /members functionality
+        // INTEGRATION VALIDATION 
         Member memberToCreate = new Member(null, "Avan Avi", "avan.avi@email.com");
         
         ResponseEntity<Member> response = restTemplate.postForEntity("/members", memberToCreate, Member.class);
@@ -36,7 +46,7 @@ class MemberControllerIT {
 
     @Test
     void testGetMemberByIdEndpoint() {
-        // INTEGRATION VALIDATION - Tests existing GET /members/{id} functionality
+        // INTEGRATION VALIDATION 
         Member memberToCreate = new Member(null, "John Doe", "john.doe@email.com");
         ResponseEntity<Member> createResponse = restTemplate.postForEntity("/members", memberToCreate, Member.class);
         Long memberId = createResponse.getBody().getId();
@@ -53,8 +63,8 @@ class MemberControllerIT {
 
     @Test
     void testGetMemberByIdWhenNotFound() {
-        // INTEGRATION VALIDATION - Tests existing 404 error handling
-        // 404 handling is already implemented and working consistently with Book API
+        // INTEGRATION VALIDATION 
+        
         ResponseEntity<Member> response = restTemplate.getForEntity("/members/999", Member.class);
         
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -62,9 +72,6 @@ class MemberControllerIT {
 
     @Test
     void testGetAllMembersEndpoint() {
-        // RED 
-        
-        
         // Create multiple members first
         Member member1 = new Member(null, "Avan Avi", "avan.avi@email.com");
         Member member2 = new Member(null, "John Doe", "john.doe@email.com");
@@ -98,10 +105,7 @@ class MemberControllerIT {
 
     @Test
     void testDeleteMemberEndpoint() {
-        // RED
-        
-        
-        // Create a member first
+        // Create a member 
         Member memberToCreate = new Member(null, "Test Member", "test@email.com");
         ResponseEntity<Member> createResponse = restTemplate.postForEntity("/members", memberToCreate, Member.class);
         Long memberId = createResponse.getBody().getId();
@@ -113,7 +117,7 @@ class MemberControllerIT {
         // Delete the member 
         restTemplate.delete("/members/" + memberId);
         
-        // Verify member is deleted (should return 404)
+        
         ResponseEntity<Member> getDeletedResponse = restTemplate.getForEntity("/members/" + memberId, Member.class);
         assertEquals(HttpStatus.NOT_FOUND, getDeletedResponse.getStatusCode());
     }
