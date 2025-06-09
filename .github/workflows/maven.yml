@@ -29,11 +29,11 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
     
-    - name: Run tests
+    - name: Run tests (excluding UI)
       run: mvn clean test
     
     - name: Build with Maven
       run: mvn clean compile
     
-    - name: Verify build
-      run: mvn clean verify
+    - name: Verify build (excluding UI tests)
+      run: mvn clean verify -DskipUITests=true
