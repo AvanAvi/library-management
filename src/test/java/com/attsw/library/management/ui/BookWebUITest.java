@@ -241,4 +241,93 @@ class BookWebUITest {
             By.xpath("//h4[contains(text(), 'No Books Found')]")));
         assertTrue(emptyMessage.isDisplayed());
     }
+    
+    @Test
+    void testFormValidationAndCancelButtons() {
+        // Test add form cancel button
+        driver.get(baseUrl + "/books-web/new");
+        
+        WebElement cancelButton = wait.until(ExpectedConditions.elementToBeClickable(
+            By.xpath("//a[@href='/books-web' and contains(text(), 'Cancel')]")));
+        cancelButton.click();
+        
+        // Verify redirect to books list
+        wait.until(ExpectedConditions.urlContains("/books-web"));
+        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/new")));
+        
+        // Test form field presence and required attributes
+        driver.get(baseUrl + "/books-web/new");
+        
+        WebElement titleField = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("title")));
+        WebElement authorField = driver.findElement(By.id("author"));
+        WebElement isbnField = driver.findElement(By.id("isbn"));
+        
+        // Verify required fields have required attribute
+        assertTrue(titleField.getAttribute("required") != null);
+        assertTrue(authorField.getAttribute("required") != null);
+        assertTrue(isbnField.getAttribute("required") != null);
+        
+        // Verify form labels
+        WebElement titleLabel = driver.findElement(By.xpath("//label[@for='title']"));
+        WebElement authorLabel = driver.findElement(By.xpath("//label[@for='author']"));
+        WebElement isbnLabel = driver.findElement(By.xpath("//label[@for='isbn']"));
+        
+        assertTrue(titleLabel.getText().contains("Title"));
+        assertTrue(authorLabel.getText().contains("Author"));
+        assertTrue(isbnLabel.getText().contains("ISBN"));
+    }
+    
+    @Test
+    void testEditFormCancelAndPrePopulation() {
+        // First, add a book to test edit form
+        driver.get(baseUrl + "/books-web/new");
+        
+        // Fill and submit the form
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("title"))).sendKeys("Test Form Book");
+        driver.findElement(By.id("author")).sendKeys("Form Author");
+        driver.findElement(By.id("isbn")).sendKeys("FORM-123456789");
+        driver.findElement(By.id("publishedYear")).sendKeys("2022");
+        driver.findElement(By.id("category")).sendKeys("Form Testing");
+        
+        driver.findElement(By.xpath("//button[@type='submit']")).click();
+        
+        // Wait for redirect to books list
+        wait.until(ExpectedConditions.urlContains("/books-web"));
+        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/new")));
+        
+        // Click Edit button
+        WebElement editButton = wait.until(ExpectedConditions.elementToBeClickable(
+            By.xpath("//a[contains(@href, '/books-web/edit/') and contains(text(), 'Edit')]")));
+        editButton.click();
+        
+        // Verify we're on edit page
+        wait.until(ExpectedConditions.urlContains("/books-web/edit/"));
+        
+        // Verify all form fields are pre-populated correctly
+        WebElement titleField = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("title")));
+        WebElement authorField = driver.findElement(By.id("author"));
+        WebElement isbnField = driver.findElement(By.id("isbn"));
+        WebElement yearField = driver.findElement(By.id("publishedYear"));
+        WebElement categoryField = driver.findElement(By.id("category"));
+        
+        assertEquals("Test Form Book", titleField.getAttribute("value"));
+        assertEquals("Form Author", authorField.getAttribute("value"));
+        assertEquals("FORM-123456789", isbnField.getAttribute("value"));
+        assertEquals("2022", yearField.getAttribute("value"));
+        assertEquals("Form Testing", categoryField.getAttribute("value"));
+        
+        // Test cancel button on edit form
+        WebElement cancelButton = driver.findElement(
+            By.xpath("//a[@href='/books-web' and contains(text(), 'Cancel')]"));
+        cancelButton.click();
+        
+        // Verify redirect to books list without changes
+        wait.until(ExpectedConditions.urlContains("/books-web"));
+        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/edit")));
+        
+        // Verify original book data is still there (unchanged)
+        WebElement originalTitle = wait.until(ExpectedConditions.presenceOfElementLocated(
+            By.xpath("//td[contains(text(), 'Test Form Book')]")));
+        assertTrue(originalTitle.isDisplayed());
+    }
 }
