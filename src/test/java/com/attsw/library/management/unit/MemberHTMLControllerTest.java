@@ -45,7 +45,7 @@ class MemberHTMLControllerTest {
         when(memberService.findAll()).thenReturn(members);
         
         mockMvc.perform(get("/members-web"))
-                .andExpected(status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(view().name("members"))
                 .andExpect(model().attributeExists("members"))
                 .andExpect(model().attribute("members", members));
