@@ -60,4 +60,18 @@ public class BookHTMLController {
         // Redirect to books list
         return "redirect:/books-web";
     }
+    
+    @GetMapping("/books-web/edit/{id}")
+    public String showEditBookForm(@PathVariable Long id, Model model) {
+        Book book = bookService.findById(id);
+        model.addAttribute("book", book);
+        return "edit-book";
+    }
+
+    @PostMapping("/books-web/update/{id}")
+    public String updateBook(@PathVariable Long id, @ModelAttribute Book book) {
+        book.setId(id);
+        bookService.saveBook(book);
+        return "redirect:/books-web";
+    }
 }

@@ -48,4 +48,11 @@ public class BookController {
         bookService.deleteBook(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Book> updateBook(@PathVariable Long id, @Valid @RequestBody Book book) {
+        book.setId(id);
+        Book updatedBook = bookService.saveBook(book);
+        return new ResponseEntity<>(updatedBook, HttpStatus.OK);
+    }
 }
