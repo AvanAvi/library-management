@@ -100,4 +100,23 @@ class BookControllerTest {
         assertNull(response.getBody());
         verify(bookService).findById(nonExistentId);
     }
+    
+    @Test
+    void testUpdateBook() {
+        // ARRANGE
+        Long bookId = 1L;
+        Book existingBook = new Book(bookId, "Old Title", "Old Author", "123456789", 2020, "Old Category");
+        Book updatedBook = new Book(bookId, "New Title", "New Author", "123456789", 2021, "New Category");
+        
+        when(bookService.saveBook(any(Book.class))).thenReturn(updatedBook);
+        
+        // ACT
+        ResponseEntity<Book> response = bookController.updateBook(bookId, updatedBook);
+        
+        // ASSERT
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(updatedBook, response.getBody());
+        assertEquals(bookId, response.getBody().getId());
+        verify(bookService).saveBook(any(Book.class));
+    }
 }

@@ -93,4 +93,43 @@ class BookHTMLControllerTest {
         
         verify(bookService).deleteBook(bookId);
     }
+    
+    @Test
+    void testShowEditBookForm() throws Exception {
+        // ARRANGE
+        Long bookId = 1L;
+        Book book = new Book(bookId, "Test Book", "Test Author", "123456789", 2023, "Test");
+        
+        when(bookService.findById(bookId)).thenReturn(book);
+        
+        // ACT & ASSERT
+        mockMvc.perform(get("/books-web/edit/{id}", bookId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("edit-book"))
+                .andExpect(model().attributeExists("book"))
+                .andExpect(model().attribute("book", book));
+        
+        verify(bookService).findById(bookId);
+    }
+
+    @Test
+    void testUpdateBookForm() throws Exception {
+        // ARRANGE
+        Long bookId = 1L;
+        Book savedBook = new Book(bookId, "Updated Book", "Updated Author", "123456789", 2023, "Updated");
+        
+        when(bookService.saveBook(any(Book.class))).thenReturn(savedBook);
+        
+        // ACT & ASSERT
+        mockMvc.perform(post("/books-web/update/{id}", bookId)
+                .param("title", "Updated Book")
+                .param("author", "Updated Author")
+                .param("isbn", "123456789")
+                .param("publishedYear", "2023")
+                .param("category", "Updated"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/books-web"));
+        
+        verify(bookService).saveBook(any(Book.class));
+    }
 }
