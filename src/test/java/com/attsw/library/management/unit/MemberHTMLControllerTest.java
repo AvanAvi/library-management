@@ -91,5 +91,41 @@ class MemberHTMLControllerTest {
         verify(memberService).deleteMember(memberId);
     }
     
+    @Test
+    void testShowEditMemberForm() throws Exception {
+        // ARRANGE
+        Long memberId = 1L;
+        Member member = new Member(memberId, "Test Member", "test@email.com");
+        
+        when(memberService.findById(memberId)).thenReturn(member);
+        
+        // ACT & ASSERT
+        mockMvc.perform(get("/members-web/edit/{id}", memberId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("edit-member"))
+                .andExpect(model().attributeExists("member"))
+                .andExpect(model().attribute("member", member));
+        
+        verify(memberService).findById(memberId);
+    }
+
+    @Test
+    void testUpdateMemberForm() throws Exception {
+        // ARRANGE
+        Long memberId = 1L;
+        Member savedMember = new Member(memberId, "Updated Member", "updated@email.com");
+        
+        when(memberService.saveMember(any(Member.class))).thenReturn(savedMember);
+        
+        // ACT & ASSERT
+        mockMvc.perform(post("/members-web/update/{id}", memberId)
+                .param("name", "Updated Member")
+                .param("email", "updated@email.com"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/members-web"));
+        
+        verify(memberService).saveMember(any(Member.class));
+    }
+    
    
 }

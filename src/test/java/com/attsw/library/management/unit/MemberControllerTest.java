@@ -97,4 +97,23 @@ class MemberControllerTest {
         assertNull(response.getBody());
         verify(memberService).findById(nonExistentId);
     }
+    
+    @Test
+    void testUpdateMember() {
+        // ARRANGE
+        Long memberId = 1L;
+        Member existingMember = new Member(memberId, "Old Name", "old@email.com");
+        Member updatedMember = new Member(memberId, "New Name", "new@email.com");
+        
+        when(memberService.saveMember(any(Member.class))).thenReturn(updatedMember);
+        
+        // ACT
+        ResponseEntity<Member> response = memberController.updateMember(memberId, updatedMember);
+        
+        // ASSERT
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(updatedMember, response.getBody());
+        assertEquals(memberId, response.getBody().getId());
+        verify(memberService).saveMember(any(Member.class));
+    }
 }
