@@ -48,4 +48,11 @@ public class MemberController {
         memberService.deleteMember(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Member> updateMember(@PathVariable Long id, @Valid @RequestBody Member member) {
+        member.setId(id);
+        Member updatedMember = memberService.saveMember(member);
+        return new ResponseEntity<>(updatedMember, HttpStatus.OK);
+    }
 }

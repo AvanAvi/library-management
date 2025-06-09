@@ -60,6 +60,20 @@ public class MemberHTMLController {
         // Redirect to members list
         return "redirect:/members-web";
     }
+    
+    @GetMapping("/members-web/edit/{id}")
+    public String showEditMemberForm(@PathVariable Long id, Model model) {
+        Member member = memberService.findById(id);
+        model.addAttribute("member", member);
+        return "edit-member";
+    }
+
+    @PostMapping("/members-web/update/{id}")
+    public String updateMember(@PathVariable Long id, @ModelAttribute Member member) {
+        member.setId(id);
+        memberService.saveMember(member);
+        return "redirect:/members-web";
+    }
 
 
     
