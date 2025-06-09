@@ -40,7 +40,7 @@ class HomePageUITest {
     void setUp() {
         driver = new RemoteWebDriver(chrome.getSeleniumAddress(), new ChromeOptions());
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        // Use localhost instead of host.testcontainers.internal
+        
         baseUrl = "http://host.docker.internal:" + port;
     }
 
@@ -87,5 +87,117 @@ class HomePageUITest {
         WebElement booksHeading = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//h2[contains(text(), 'Book Management')]")));
         assertTrue(booksHeading.isDisplayed());
+    }
+    
+    @Test
+    void testNavigationToMembers() {
+        // Navigate to home page
+        driver.get(baseUrl + "/");
+        
+        // Click "Manage Members" button
+        WebElement manageMembersButton = wait.until(ExpectedConditions.elementToBeClickable(
+            By.xpath("//a[@href='/members-web' and contains(text(), 'Manage Members')]")));
+        manageMembersButton.click();
+        
+        // Verify navigation to members page
+        wait.until(ExpectedConditions.urlContains("/members-web"));
+        assertTrue(driver.getCurrentUrl().contains("/members-web"));
+        
+        // Verify members page loaded
+        WebElement membersHeading = wait.until(ExpectedConditions.presenceOfElementLocated(
+            By.xpath("//h2[contains(text(), 'Member Management')]")));
+        assertTrue(membersHeading.isDisplayed());
+    }
+    
+    @Test
+    void testNavigationBackToHomeFromBooks() {
+        // Navigate to home page
+        driver.get(baseUrl + "/");
+        
+        // Go to books page
+        WebElement manageBooksButton = wait.until(ExpectedConditions.elementToBeClickable(
+            By.xpath("//a[@href='/books-web' and contains(text(), 'Manage Books')]")));
+        manageBooksButton.click();
+        
+        // Wait for books page to load
+        wait.until(ExpectedConditions.urlContains("/books-web"));
+        
+        // Click "Home" button on books page
+        WebElement homeButton = wait.until(ExpectedConditions.elementToBeClickable(
+            By.xpath("//a[@href='/' and contains(text(), 'Home')]")));
+        homeButton.click();
+        
+        // Verify back to home page
+        wait.until(ExpectedConditions.urlMatches(".*:"+port+"/$"));
+        
+        // Verify home page content is loaded
+        WebElement heading = wait.until(ExpectedConditions.presenceOfElementLocated(
+            By.xpath("//h1[contains(text(), 'Library Management System')]")));
+        assertTrue(heading.isDisplayed());
+    }
+    
+    @Test
+    void testNavigationBackToHomeFromMembers() {
+        // Navigate to home page
+        driver.get(baseUrl + "/");
+        
+        // Go to members page
+        WebElement manageMembersButton = wait.until(ExpectedConditions.elementToBeClickable(
+            By.xpath("//a[@href='/members-web' and contains(text(), 'Manage Members')]")));
+        manageMembersButton.click();
+        
+        // Wait for members page to load
+        wait.until(ExpectedConditions.urlContains("/members-web"));
+        
+        // Click "Home" button on members page
+        WebElement homeButton = wait.until(ExpectedConditions.elementToBeClickable(
+            By.xpath("//a[@href='/' and contains(text(), 'Home')]")));
+        homeButton.click();
+        
+        // Verify back to home page
+        wait.until(ExpectedConditions.urlMatches(".*:"+port+"/$"));
+        
+        // Verify home page content is loaded
+        WebElement heading = wait.until(ExpectedConditions.presenceOfElementLocated(
+            By.xpath("//h1[contains(text(), 'Library Management System')]")));
+        assertTrue(heading.isDisplayed());
+    }
+    
+    @Test
+    void testHomePageUIElementsPresence() {
+        // Navigate to home page
+        driver.get(baseUrl + "/");
+        
+        // Verify card structure
+        WebElement mainCard = wait.until(ExpectedConditions.presenceOfElementLocated(
+            By.className("card")));
+        assertTrue(mainCard.isDisplayed());
+        
+        // Verify both management cards are present
+        WebElement booksCard = driver.findElement(
+            By.xpath("//div[@class='card-body']//h5[contains(text(), 'Books')]"));
+        assertTrue(booksCard.isDisplayed());
+        
+        WebElement membersCard = driver.findElement(
+            By.xpath("//div[@class='card-body']//h5[contains(text(), 'Members')]"));
+        assertTrue(membersCard.isDisplayed());
+        
+        // Verify card descriptions
+        WebElement booksDescription = driver.findElement(
+            By.xpath("//p[contains(text(), 'Manage your book collection')]"));
+        assertTrue(booksDescription.isDisplayed());
+        
+        WebElement membersDescription = driver.findElement(
+            By.xpath("//p[contains(text(), 'Manage library members')]"));
+        assertTrue(membersDescription.isDisplayed());
+        
+      
+        WebElement manageBooksBtn = driver.findElement(
+            By.xpath("//a[@href='/books-web' and contains(text(), 'Manage Books')]"));
+        assertTrue(manageBooksBtn.isEnabled());
+        
+        WebElement manageMembersBtn = driver.findElement(
+            By.xpath("//a[@href='/members-web' and contains(text(), 'Manage Members')]"));
+        assertTrue(manageMembersBtn.isEnabled());
     }
 }
