@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BookE2E {
 
     @Container  
-    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")  // ← ADD THIS CONTAINER
+    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")  
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test");
