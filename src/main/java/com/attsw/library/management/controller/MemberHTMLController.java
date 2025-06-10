@@ -12,6 +12,8 @@ import java.util.List;
 @Controller  
 public class MemberHTMLController {
 
+    private static final String REDIRECT_MEMBERS_WEB = "redirect:/members-web";
+    
     private final MemberService memberService;
 
     @Autowired
@@ -49,7 +51,7 @@ public class MemberHTMLController {
         memberService.saveMember(member);
         
         // Redirect to members list (POST-Redirect-GET pattern)
-        return "redirect:/members-web";
+        return REDIRECT_MEMBERS_WEB;
     }
     
     @PostMapping("/members-web/delete/{id}")
@@ -58,7 +60,7 @@ public class MemberHTMLController {
         memberService.deleteMember(id);
         
         // Redirect to members list
-        return "redirect:/members-web";
+        return REDIRECT_MEMBERS_WEB;
     }
     
     @GetMapping("/members-web/edit/{id}")
@@ -72,9 +74,6 @@ public class MemberHTMLController {
     public String updateMember(@PathVariable Long id, @ModelAttribute Member member) {
         member.setId(id);
         memberService.saveMember(member);
-        return "redirect:/members-web";
+        return REDIRECT_MEMBERS_WEB;
     }
-
-
-    
 }

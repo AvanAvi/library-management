@@ -12,6 +12,8 @@ import java.util.List;
 @Controller  // Avan - @Controller for web pages 
 public class BookHTMLController {
 
+    private static final String REDIRECT_BOOKS_WEB = "redirect:/books-web";
+    
     private final BookService bookService;
 
     @Autowired
@@ -49,7 +51,7 @@ public class BookHTMLController {
         bookService.saveBook(book);
         
         // Redirect to books list (POST-Redirect-GET pattern)
-        return "redirect:/books-web";
+        return REDIRECT_BOOKS_WEB;
     }
 
     @PostMapping("/books-web/delete/{id}")
@@ -58,7 +60,7 @@ public class BookHTMLController {
         bookService.deleteBook(id);
         
         // Redirect to books list
-        return "redirect:/books-web";
+        return REDIRECT_BOOKS_WEB;
     }
     
     @GetMapping("/books-web/edit/{id}")
@@ -72,6 +74,6 @@ public class BookHTMLController {
     public String updateBook(@PathVariable Long id, @ModelAttribute Book book) {
         book.setId(id);
         bookService.saveBook(book);
-        return "redirect:/books-web";
+        return REDIRECT_BOOKS_WEB;
     }
 }
