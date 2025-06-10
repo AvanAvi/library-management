@@ -251,8 +251,8 @@ class MemberWebUITest {
         WebElement emailField = driver.findElement(By.id("email"));
         
         // Verify required fields have required attribute
-        assertTrue(nameField.getAttribute("required") != null);
-        assertTrue(emailField.getAttribute("required") != null);
+        assertNotNull(nameField.getAttribute("required"));
+        assertNotNull(emailField.getAttribute("required"));
         
         // Verify email field has email type
         assertEquals("email", emailField.getAttribute("type"));
