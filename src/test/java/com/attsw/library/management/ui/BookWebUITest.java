@@ -263,9 +263,9 @@ class BookWebUITest {
         WebElement isbnField = driver.findElement(By.id("isbn"));
         
         // Verify required fields have required attribute
-        assertTrue(titleField.getAttribute("required") != null);
-        assertTrue(authorField.getAttribute("required") != null);
-        assertTrue(isbnField.getAttribute("required") != null);
+        assertNotNull(titleField.getAttribute("required"));
+        assertNotNull(authorField.getAttribute("required"));
+        assertNotNull(isbnField.getAttribute("required"));
         
         // Verify form labels
         WebElement titleLabel = driver.findElement(By.xpath("//label[@for='title']"));
