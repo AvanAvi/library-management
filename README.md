@@ -17,7 +17,7 @@ Library Management System is a web application built using [Java 17](https://www
 
 To run the application, follow the steps below:
 
-1. Clone the repository: \`git clone https://github.com/AvanAvi/library-management.git\`
+1. Clone the repository: `git clone https://github.com/AvanAvi/library-management.git`
 2. Import the project into Eclipse:
    - Open Eclipse and select **File -> Import**.
    - Choose **Maven -> Existing Maven Projects** and click **Next**.
@@ -25,9 +25,9 @@ To run the application, follow the steps below:
    - Click **Finish** to import the project into Eclipse.
 3. In [Eclipse](https://www.eclipse.org/downloads/packages/), right-click on the project and select **Run As -> Maven Install** to build the project and download the required dependencies.
 4. Once the Maven build is successful, you can run the application:
-   \`\`\`bash
+   ```bash
    mvn spring-boot:run
-   \`\`\`
+   ```
 5. The application will now be accessible at [http://localhost:8081](http://localhost:8081).
 
 ## API Endpoints
@@ -60,7 +60,7 @@ The HTML frontend allows users to interact with the API using a user-friendly in
 
 The project includes comprehensive testing:
 
-\`\`\`bash
+```bash
 # Unit tests
 mvn test
 
@@ -72,7 +72,7 @@ mvn clean verify
 
 # Mutation testing
 mvn org.pitest:pitest-maven:mutationCoverage
-\`\`\`
+```
 
 ## Project Structure
 
