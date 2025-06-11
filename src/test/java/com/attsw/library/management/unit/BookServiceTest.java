@@ -106,4 +106,19 @@ class BookServiceTest {
         assertEquals("Book not found with id: " + nonExistentId, exception.getMessage());
         verify(bookRepository).findById(nonExistentId);
     }
+    
+    @Test
+    void testUpdateBook() {
+        // RED 
+        Long bookId = 1L;
+        Book updateData = new Book(null, "Updated Title", "Updated Author", "123456789", 2023, "Updated");
+        Book expectedResult = new Book(bookId, "Updated Title", "Updated Author", "123456789", 2023, "Updated");
+        
+        when(bookRepository.save(any(Book.class))).thenReturn(expectedResult);
+        
+        
+        Book result = bookService.updateBook(bookId, updateData);
+        
+        assertEquals(expectedResult, result);
+    }
 }
