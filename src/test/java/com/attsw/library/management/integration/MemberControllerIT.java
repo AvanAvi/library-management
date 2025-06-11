@@ -11,6 +11,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -121,4 +123,40 @@ class MemberControllerIT {
         ResponseEntity<Member> getDeletedResponse = restTemplate.getForEntity("/members/" + memberId, Member.class);
         assertEquals(HttpStatus.NOT_FOUND, getDeletedResponse.getStatusCode());
     }
+    
+    @Test
+    void testUpdateMemberEndpoint() {
+        // INTEGRATION VALIDATION - PUT endpoint
+        
+        // First create a member
+        Member originalMember = new Member(null, "Original Name", "original@email.com");
+        ResponseEntity<Member> createResponse = restTemplate.postForEntity("/members", originalMember, Member.class);
+        Long memberId = createResponse.getBody().getId();
+        
+        // Now update the member
+        Member updatedMember = new Member(memberId, "Updated Name", "updated@email.com");
+        
+        ResponseEntity<Member> updateResponse = restTemplate.exchange(
+            "/members/" + memberId,
+            HttpMethod.PUT,
+            new HttpEntity<>(updatedMember),
+            Member.class
+        );
+        
+        // Verify update response
+        assertEquals(HttpStatus.OK, updateResponse.getStatusCode());
+        Member responseMember = updateResponse.getBody();
+        assertNotNull(responseMember);
+        assertEquals(memberId, responseMember.getId());
+        assertEquals("Updated Name", responseMember.getName());
+        assertEquals("updated@email.com", responseMember.getEmail());
+        
+        // Verify the member was actually updated in database
+        ResponseEntity<Member> getResponse = restTemplate.getForEntity("/members/" + memberId, Member.class);
+        assertEquals(HttpStatus.OK, getResponse.getStatusCode());
+        Member retrievedMember = getResponse.getBody();
+        assertEquals("Updated Name", retrievedMember.getName());
+        assertEquals("updated@email.com", retrievedMember.getEmail());
+    }
+    
 }
