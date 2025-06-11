@@ -32,4 +32,9 @@ public class BookService {
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
     }
+
+    public Book updateBook(Long id, Book updateData) {
+        updateData.setId(id);
+        return bookRepository.save(updateData);
+    }
 }
