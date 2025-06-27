@@ -3,6 +3,8 @@ package com.attsw.library.management.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Email;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "members")
@@ -19,6 +21,9 @@ public class Member {
     @Email(message = "Email should be valid")
     @Column(unique = true, nullable = false)
     private String email;
+    
+    @OneToMany(mappedBy = "borrowedBy", fetch = FetchType.LAZY)
+    private List<Book> borrowedBooks = new ArrayList<>();
 
     // Default constructor
     public Member() {
@@ -54,5 +59,13 @@ public class Member {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    
+    public List<Book> getBorrowedBooks() {
+        return borrowedBooks;
+    }
+
+    public void setBorrowedBooks(List<Book> borrowedBooks) {
+        this.borrowedBooks = borrowedBooks;
     }
 }
