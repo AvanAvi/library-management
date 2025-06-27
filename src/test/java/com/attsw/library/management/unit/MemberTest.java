@@ -34,4 +34,16 @@ class MemberTest {
         assertTrue(member.getClass().isAnnotationPresent(jakarta.persistence.Entity.class));
         assertNotNull(member.getId());
     }
+    
+ 
+
+    @Test
+    void testMemberHasBorrowedBooksListInitially() {
+        // RED
+        Member member = new Member(1L, "John Doe", "john@email.com");
+        
+        java.util.List<com.attsw.library.management.entity.Book> borrowedBooks = member.getBorrowedBooks();
+        assertNotNull(borrowedBooks, "Borrowed books list should not be null");
+        assertTrue(borrowedBooks.isEmpty(), "Borrowed books list should be empty initially");
+    }
 }
