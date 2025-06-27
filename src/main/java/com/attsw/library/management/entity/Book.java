@@ -27,6 +27,10 @@ public class Book {
     private Integer publishedYear;
 
     private String category;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "borrowed_by_member_id")
+    private Member borrowedBy;
 
     // Default constructor
     public Book() {
@@ -40,6 +44,7 @@ public class Book {
         this.isbn = isbn;
         this.publishedYear = publishedYear;
         this.category = category;
+        this.borrowedBy = null; 
     }
 
     // Getters and Setters
@@ -89,5 +94,17 @@ public class Book {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+    
+    public Member getBorrowedBy() {
+        return borrowedBy;
+    }
+
+    public void setBorrowedBy(Member borrowedBy) {
+        this.borrowedBy = borrowedBy;
+    }
+
+    public boolean isAvailable() {
+        return borrowedBy == null;
     }
 }
