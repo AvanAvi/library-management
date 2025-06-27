@@ -1,4 +1,5 @@
 package com.attsw.library.management.unit;
+import com.attsw.library.management.entity.Member;
 
 import org.junit.jupiter.api.Test;
 
@@ -48,14 +49,55 @@ class BookTest {
         assertEquals("Programming", book.getCategory());
     }
 
-    // RED - New test for JPA annotations 
+    // RED
     @Test
     void testBookIsJpaEntity() {
         
         Book book = new Book(1L, "Test Book", "Test Author", "123456789", 2023, "Test");
         
-        // We'll verify JPA annotations are present (this will fail until we add them)
+        
         assertTrue(book.getClass().isAnnotationPresent(jakarta.persistence.Entity.class));
         assertNotNull(book.getId());
     }
+    
+    @Test
+    void testBookBorrowedByIsNullByDefault() {
+        // RED 
+        Book book = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
+        
+        assertNull(book.getBorrowedBy(), "Book should not have a borrower initially");
+    }
+    
+    @Test
+    void testBookCanSetBorrowedBy() {
+        // RED 
+        Book book = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
+        Member member = new Member(1L, "John Doe", "john@email.com");
+        
+        book.setBorrowedBy(member);
+        
+        assertEquals(member, book.getBorrowedBy(), "Book should be borrowed by the member");
+    }
+    
+    @Test
+    void testBookIsAvailableWhenNotBorrowed() {
+        // RED 
+        Book book = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
+        
+        assertTrue(book.isAvailable(), "Book should be available when not borrowed");
+    }
+    
+    @Test
+    void testBookIsNotAvailableWhenBorrowed() {
+        // RED 
+        Book book = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
+        Member member = new Member(1L, "John Doe", "john@email.com");
+        
+        book.setBorrowedBy(member);
+        
+        assertFalse(book.isAvailable(), "Book should not be available when borrowed");
+    }
+    
+    
+    
 }
