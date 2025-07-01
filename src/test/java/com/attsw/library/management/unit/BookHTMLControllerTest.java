@@ -132,4 +132,120 @@ class BookHTMLControllerTest {
         
         verify(bookService).saveBook(any(Book.class));
     }
+    
+ 
+
+    @Test
+    void testShowBorrowBookForm() throws Exception {
+        // RED
+        Long bookId = 1L;
+        Book book = new Book(bookId, "Test Book", "Test Author", "123456789", 2023, "Test");
+        List<Member> members = Arrays.asList(
+            new Member(1L, "John Doe", "john@email.com"),
+            new Member(2L, "Jane Smith", "jane@email.com")
+        );
+        
+        when(bookService.findById(bookId)).thenReturn(book);
+        when(memberService.findAll()).thenReturn(members);
+        
+        mockMvc.perform(get("/books-web/borrow/{id}", bookId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("borrow-book"))
+                .andExpect(model().attributeExists("book"))
+                .andExpect(model().attributeExists("members"))
+                .andExpect(model().attribute("book", book))
+                .andExpect(model().attribute("members", members));
+        
+        verify(bookService).findById(bookId);
+        verify(memberService).findAll();
+    }
+
+    @Test
+    void testBorrowBook() throws Exception {
+        // RED
+        Long bookId = 1L;
+        Long memberId = 2L;
+        Book book = new Book(bookId, "Test Book", "Test Author", "123456789", 2023, "Test");
+        Member member = new Member(memberId, "John Doe", "john@email.com");
+        
+        when(bookService.findById(bookId)).thenReturn(book);
+        when(memberService.findById(memberId)).thenReturn(member);
+        when(bookService.saveBook(any(Book.class))).thenReturn(book);
+        
+        mockMvc.perform(post("/books-web/borrow/{bookId}", bookId)
+                .param("memberId", memberId.toString()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/books-web"));
+        
+        verify(bookService).findById(bookId);
+        verify(memberService).findById(memberId);
+        verify(bookService).saveBook(book);
+    }
+
+    @Test
+    void testReturnBook() throws Exception {
+        // RED
+        Long bookId = 1L;
+        Member member = new Member(2L, "John Doe", "john@email.com");
+        Book book = new Book(bookId, "Test Book", "Test Author", "123456789", 2023, "Test");
+        book.setBorrowedBy(member); // Initially borrowed
+        
+        when(bookService.findById(bookId)).thenReturn(book);
+        when(bookService.saveBook(any(Book.class))).thenReturn(book);
+        
+        mockMvc.perform(post("/books-web/return/{id}", bookId))
+                .andExpected(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/books-web"));
+        
+        verify(bookService).findById(bookId);
+        verify(bookService).saveBook(book);
+        // Verify the book is no longer borrowed
+        assertNull(book.getBorrowedBy());
+    }
+
+    @Test
+    void testShowBorrowToMemberForm() throws Exception {
+        // RED
+        Long memberId = 1L;
+        Member member = new Member(memberId, "John Doe", "john@email.com");
+        List<Book> availableBooks = Arrays.asList(
+            new Book(1L, "Available Book 1", "Author 1", "111111111", 2023, "Test"),
+            new Book(2L, "Available Book 2", "Author 2", "222222222", 2023, "Test")
+        );
+        
+        when(memberService.findById(memberId)).thenReturn(member);
+        when(bookService.findAll()).thenReturn(availableBooks);
+        
+        mockMvc.perform(get("/books-web/borrow-to/{memberId}", memberId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("borrow-to-member"))
+                .andExpect(model().attributeExists("member"))
+                .andExpect(model().attributeExists("availableBooks"))
+                .andExpect(model().attribute("member", member));
+        
+        verify(memberService).findById(memberId);
+        verify(bookService).findAll();
+    }
+
+    @Test
+    void testBorrowBookToMember() throws Exception {
+        // RED
+        Long memberId = 1L;
+        Long bookId = 2L;
+        Member member = new Member(memberId, "John Doe", "john@email.com");
+        Book book = new Book(bookId, "Test Book", "Test Author", "123456789", 2023, "Test");
+        
+        when(memberService.findById(memberId)).thenReturn(member);
+        when(bookService.findById(bookId)).thenReturn(book);
+        when(bookService.saveBook(any(Book.class))).thenReturn(book);
+        
+        mockMvc.perform(post("/books-web/borrow-to/{memberId}", memberId)
+                .param("bookId", bookId.toString()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/members-web"));
+        
+        verify(memberService).findById(memberId);
+        verify(bookService).findById(bookId);
+        verify(bookService).saveBook(book);
+    }
 }
