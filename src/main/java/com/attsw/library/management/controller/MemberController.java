@@ -1,6 +1,7 @@
 package com.attsw.library.management.controller;
 
 import com.attsw.library.management.entity.Member;
+import com.attsw.library.management.entity.Book;
 import com.attsw.library.management.dto.MemberDto;
 import com.attsw.library.management.service.MemberService;
 import com.attsw.library.management.exception.MemberNotFoundException;
@@ -70,7 +71,7 @@ public class MemberController {
     // Entity to DTO conversion
     private MemberDto convertToDto(Member member) {
         List<Long> borrowedBookIds = member.getBorrowedBooks().stream()
-                .map(book -> book.getId())
+                .map(Book::getId)
                 .toList();
         
         return new MemberDto(
@@ -83,13 +84,10 @@ public class MemberController {
     
     // DTO to Entity conversion
     private Member convertToEntity(MemberDto memberDto) {
-        Member member = new Member(
+        return new Member(
             memberDto.getId(),
             memberDto.getName(),
             memberDto.getEmail()
         );
-        
-        
-        return member;
     }
 }

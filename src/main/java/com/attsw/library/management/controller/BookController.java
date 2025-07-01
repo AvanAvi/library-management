@@ -84,7 +84,7 @@ public class BookController {
     
     // DTO to Entity conversion
     private Book convertToEntity(BookDto bookDto) {
-        Book book = new Book(
+        return new Book(
             bookDto.getId(),
             bookDto.getTitle(),
             bookDto.getAuthor(),
@@ -92,9 +92,5 @@ public class BookController {
             bookDto.getPublishedYear(),
             bookDto.getCategory()
         );
-        
-        
-        
-        return book;
     }
 }
