@@ -2,7 +2,9 @@ package com.attsw.library.management.unit;
 
 import com.attsw.library.management.controller.BookHTMLController;
 import com.attsw.library.management.service.BookService;
+import com.attsw.library.management.service.MemberService;  // ADD THIS IMPORT
 import com.attsw.library.management.entity.Book;
+import com.attsw.library.management.entity.Member;  // ADD THIS IMPORT
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +16,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;  // ADD THIS IMPORT
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -26,12 +29,16 @@ class BookHTMLControllerTest {
 
     @Mock
     private BookService bookService;
+    
+    @Mock
+    private MemberService memberService;  // ADD THIS MOCK
 
     private BookHTMLController bookHTMLController;
 
     @BeforeEach
     void setUp() {
-        bookHTMLController = new BookHTMLController(bookService);
+        // UPDATE CONSTRUCTOR - ADD MemberService
+        bookHTMLController = new BookHTMLController(bookService, memberService);
         mockMvc = MockMvcBuilders.standaloneSetup(bookHTMLController).build();
     }
 
@@ -133,8 +140,6 @@ class BookHTMLControllerTest {
         verify(bookService).saveBook(any(Book.class));
     }
     
- 
-
     @Test
     void testShowBorrowBookForm() throws Exception {
         // RED
@@ -184,7 +189,7 @@ class BookHTMLControllerTest {
 
     @Test
     void testReturnBook() throws Exception {
-        // RED
+        // RED - FIX THE TYPO: .andExpected -> .andExpect
         Long bookId = 1L;
         Member member = new Member(2L, "John Doe", "john@email.com");
         Book book = new Book(bookId, "Test Book", "Test Author", "123456789", 2023, "Test");
@@ -194,7 +199,7 @@ class BookHTMLControllerTest {
         when(bookService.saveBook(any(Book.class))).thenReturn(book);
         
         mockMvc.perform(post("/books-web/return/{id}", bookId))
-                .andExpected(status().is3xxRedirection())
+                .andExpect(status().is3xxRedirection())  // FIXED TYPO
                 .andExpect(redirectedUrl("/books-web"));
         
         verify(bookService).findById(bookId);
