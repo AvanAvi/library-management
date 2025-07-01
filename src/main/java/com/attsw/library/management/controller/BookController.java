@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 import com.attsw.library.management.exception.BookNotFoundException;
 
 @RestController
@@ -49,7 +48,7 @@ public class BookController {
         List<Book> books = bookService.findAll();
         List<BookDto> bookDtos = books.stream()
                 .map(this::convertToDto)
-                .collect(Collectors.toList());
+                .toList();
         return new ResponseEntity<>(bookDtos, HttpStatus.OK);
     }
     

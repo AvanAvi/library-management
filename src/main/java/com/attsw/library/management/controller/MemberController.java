@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/members")
@@ -49,7 +48,7 @@ public class MemberController {
         List<Member> members = memberService.findAll();
         List<MemberDto> memberDtos = members.stream()
                 .map(this::convertToDto)
-                .collect(Collectors.toList());
+                .toList();
         return new ResponseEntity<>(memberDtos, HttpStatus.OK);
     }
     
@@ -72,7 +71,7 @@ public class MemberController {
     private MemberDto convertToDto(Member member) {
         List<Long> borrowedBookIds = member.getBorrowedBooks().stream()
                 .map(book -> book.getId())
-                .collect(Collectors.toList());
+                .toList();
         
         return new MemberDto(
             member.getId(),
@@ -89,7 +88,6 @@ public class MemberController {
             memberDto.getName(),
             memberDto.getEmail()
         );
-        
         
         
         return member;
