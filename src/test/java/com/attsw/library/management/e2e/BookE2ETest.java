@@ -1,6 +1,6 @@
 package com.attsw.library.management.e2e;
 
-import com.attsw.library.management.entity.Book;
+import com.attsw.library.management.dto.BookDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,18 +30,18 @@ class BookE2ETest {
 
     @Test
     void testCompleteBookWorkflow() {
-        Book newBook = new Book(null, "Test Book E2E", "Test Author", "E2E-123456", 2023, "Testing");
+        BookDto newBook = new BookDto(null, "Test Book E2E", "Test Author", "E2E-123456", 2023, "Testing", null);
         
-        ResponseEntity<Book> createResponse = restTemplate.postForEntity("/books", newBook, Book.class);
+        ResponseEntity<BookDto> createResponse = restTemplate.postForEntity("/books", newBook, BookDto.class);
         assertEquals(HttpStatus.CREATED, createResponse.getStatusCode());
     }
 
     @Test 
     void testBookValidationFailure() {
         
-        Book invalidBook = new Book(null, null, null, null, null, null); 
+        BookDto invalidBook = new BookDto(null, null, null, null, null, null, null); 
         
-        ResponseEntity<Book> response = restTemplate.postForEntity("/books", invalidBook, Book.class);
+        ResponseEntity<BookDto> response = restTemplate.postForEntity("/books", invalidBook, BookDto.class);
         
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }

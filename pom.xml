@@ -23,11 +23,13 @@
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.coverage.exclusions>
 			**/LibraryManagementSystemApplication.java,
-			**/entity/*.java
+			**/entity/*.java,
+			**/dto/*.java
 		</sonar.coverage.exclusions>
 		<sonar.exclusions>
 			**/LibraryManagementSystemApplication.java,
-			**/entity/*.java
+			**/entity/*.java,
+			**/dto/*.java
 		</sonar.exclusions>
 		<!-- Enhanced coverage configuration -->
 		<sonar.sources>src/main/java</sonar.sources>
@@ -230,6 +232,7 @@
 					<excludes>
 						<exclude>**/LibraryManagementSystemApplication.class</exclude>
 						<exclude>**/entity/*.class</exclude>
+						<exclude>**/dto/*.class</exclude>
 					</excludes>
 				</configuration>
 				<executions>

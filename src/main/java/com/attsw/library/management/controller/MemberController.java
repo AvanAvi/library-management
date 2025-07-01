@@ -1,17 +1,21 @@
 package com.attsw.library.management.controller;
 
 import com.attsw.library.management.entity.Member;
+import com.attsw.library.management.dto.MemberDto;
 import com.attsw.library.management.service.MemberService;
-import com.attsw.library.management.exception.MemberNotFoundException; // ← ADD THIS IMPORT
+import com.attsw.library.management.exception.MemberNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/members")
+@Transactional
 public class MemberController {
 
     private final MemberService memberService;
@@ -22,25 +26,31 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResponseEntity<Member> saveMember(@Valid @RequestBody Member member) {
+    public ResponseEntity<MemberDto> saveMember(@Valid @RequestBody MemberDto memberDto) {
+        Member member = convertToEntity(memberDto);
         Member savedMember = memberService.saveMember(member);
-        return new ResponseEntity<>(savedMember, HttpStatus.CREATED);
+        MemberDto savedMemberDto = convertToDto(savedMember);
+        return new ResponseEntity<>(savedMemberDto, HttpStatus.CREATED);
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<Member> findById(@PathVariable Long id) {
+    public ResponseEntity<MemberDto> findById(@PathVariable Long id) {
         try {
             Member member = memberService.findById(id);
-            return new ResponseEntity<>(member, HttpStatus.OK);
+            MemberDto memberDto = convertToDto(member);
+            return new ResponseEntity<>(memberDto, HttpStatus.OK);
         } catch (MemberNotFoundException e) { 
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     
     @GetMapping
-    public ResponseEntity<List<Member>> findAll() {
+    public ResponseEntity<List<MemberDto>> findAll() {
         List<Member> members = memberService.findAll();
-        return new ResponseEntity<>(members, HttpStatus.OK);
+        List<MemberDto> memberDtos = members.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(memberDtos, HttpStatus.OK);
     }
     
     @DeleteMapping("/{id}")
@@ -50,9 +60,38 @@ public class MemberController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Member> updateMember(@PathVariable Long id, @Valid @RequestBody Member member) {
-        member.setId(id);
+    public ResponseEntity<MemberDto> updateMember(@PathVariable Long id, @Valid @RequestBody MemberDto memberDto) {
+        memberDto.setId(id);
+        Member member = convertToEntity(memberDto);
         Member updatedMember = memberService.saveMember(member);
-        return new ResponseEntity<>(updatedMember, HttpStatus.OK);
+        MemberDto updatedMemberDto = convertToDto(updatedMember);
+        return new ResponseEntity<>(updatedMemberDto, HttpStatus.OK);
+    }
+    
+    // Entity to DTO conversion
+    private MemberDto convertToDto(Member member) {
+        List<Long> borrowedBookIds = member.getBorrowedBooks().stream()
+                .map(book -> book.getId())
+                .collect(Collectors.toList());
+        
+        return new MemberDto(
+            member.getId(),
+            member.getName(),
+            member.getEmail(),
+            borrowedBookIds
+        );
+    }
+    
+    // DTO to Entity conversion
+    private Member convertToEntity(MemberDto memberDto) {
+        Member member = new Member(
+            memberDto.getId(),
+            memberDto.getName(),
+            memberDto.getEmail()
+        );
+        
+        
+        
+        return member;
     }
 }

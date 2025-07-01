@@ -1,6 +1,6 @@
 package com.attsw.library.management.integration;
 
-import com.attsw.library.management.entity.Book;
+import com.attsw.library.management.dto.BookDto;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +34,12 @@ class BookControllerIT {
     @Test
     void testCreateBookEndpoint() {
         // INTEGRATION VALIDATION 
-        Book bookToCreate = new Book(null, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
+        BookDto bookToCreate = new BookDto(null, "Clean Code", "Robert Martin", "123456789", 2008, "Programming", null);
         
-        ResponseEntity<Book> response = restTemplate.postForEntity("/books", bookToCreate, Book.class);
+        ResponseEntity<BookDto> response = restTemplate.postForEntity("/books", bookToCreate, BookDto.class);
         
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        Book savedBook = response.getBody();
+        BookDto savedBook = response.getBody();
         assertNotNull(savedBook);
         assertNotNull(savedBook.getId());
         assertTrue(savedBook.getId() > 0);
@@ -53,14 +53,14 @@ class BookControllerIT {
     @Test
     void testGetBookByIdEndpoint() {
         // INTEGRATION VALIDATION 
-        Book bookToCreate = new Book(null, "Effective Java", "Joshua Bloch", "987654321", 2017, "Programming");
-        ResponseEntity<Book> createResponse = restTemplate.postForEntity("/books", bookToCreate, Book.class);
+        BookDto bookToCreate = new BookDto(null, "Effective Java", "Joshua Bloch", "987654321", 2017, "Programming", null);
+        ResponseEntity<BookDto> createResponse = restTemplate.postForEntity("/books", bookToCreate, BookDto.class);
         Long bookId = createResponse.getBody().getId();
         
-        ResponseEntity<Book> getResponse = restTemplate.getForEntity("/books/" + bookId, Book.class);
+        ResponseEntity<BookDto> getResponse = restTemplate.getForEntity("/books/" + bookId, BookDto.class);
         
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
-        Book retrievedBook = getResponse.getBody();
+        BookDto retrievedBook = getResponse.getBody();
         assertNotNull(retrievedBook);
         assertEquals(bookId, retrievedBook.getId());
         assertEquals("Effective Java", retrievedBook.getTitle());
@@ -73,7 +73,7 @@ class BookControllerIT {
     @Test
     void testGetBookByIdWhenNotFound() {
         // INTEGRATION VALIDATION 
-        ResponseEntity<Book> response = restTemplate.getForEntity("/books/999", Book.class);
+        ResponseEntity<BookDto> response = restTemplate.getForEntity("/books/999", BookDto.class);
         
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -82,24 +82,24 @@ class BookControllerIT {
     void testGetAllBooksEndpoint() {
         // INTEGRATION VALIDATION 
         // Create multiple books 
-        Book book1 = new Book(null, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
-        Book book2 = new Book(null, "Effective Java", "Joshua Bloch", "987654321", 2017, "Programming");
+        BookDto book1 = new BookDto(null, "Clean Code", "Robert Martin", "123456789", 2008, "Programming", null);
+        BookDto book2 = new BookDto(null, "Effective Java", "Joshua Bloch", "987654321", 2017, "Programming", null);
         
-        restTemplate.postForEntity("/books", book1, Book.class);
-        restTemplate.postForEntity("/books", book2, Book.class);
+        restTemplate.postForEntity("/books", book1, BookDto.class);
+        restTemplate.postForEntity("/books", book2, BookDto.class);
         
         // Test GET all books
-        ResponseEntity<Book[]> response = restTemplate.getForEntity("/books", Book[].class);
+        ResponseEntity<BookDto[]> response = restTemplate.getForEntity("/books", BookDto[].class);
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        Book[] books = response.getBody();
+        BookDto[] books = response.getBody();
         assertNotNull(books);
         assertEquals(2, books.length);
         
         // Verify both books are returned 
         boolean foundCleanCode = false;
         boolean foundEffectiveJava = false;
-        for (Book book : books) {
+        for (BookDto book : books) {
             if ("Clean Code".equals(book.getTitle())) {
                 foundCleanCode = true;
                 assertEquals("Robert Martin", book.getAuthor());
@@ -118,19 +118,19 @@ class BookControllerIT {
     void testDeleteBookEndpoint() {
         // INTEGRATION VALIDATION 
         // Create a book
-        Book bookToCreate = new Book(null, "Test Book", "Test Author", "111111111", 2023, "Test");
-        ResponseEntity<Book> createResponse = restTemplate.postForEntity("/books", bookToCreate, Book.class);
+        BookDto bookToCreate = new BookDto(null, "Test Book", "Test Author", "111111111", 2023, "Test", null);
+        ResponseEntity<BookDto> createResponse = restTemplate.postForEntity("/books", bookToCreate, BookDto.class);
         Long bookId = createResponse.getBody().getId();
         
         // Verify book exists
-        ResponseEntity<Book> getResponse = restTemplate.getForEntity("/books/" + bookId, Book.class);
+        ResponseEntity<BookDto> getResponse = restTemplate.getForEntity("/books/" + bookId, BookDto.class);
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         
         // Delete the book
         restTemplate.delete("/books/" + bookId);
         
-        // Verify book is deleted (should return 404)
-        ResponseEntity<Book> getDeletedResponse = restTemplate.getForEntity("/books/" + bookId, Book.class);
+        // Verify book is deleted (return 404)
+        ResponseEntity<BookDto> getDeletedResponse = restTemplate.getForEntity("/books/" + bookId, BookDto.class);
         assertEquals(HttpStatus.NOT_FOUND, getDeletedResponse.getStatusCode());
     }
     
@@ -139,23 +139,23 @@ class BookControllerIT {
         // INTEGRATION VALIDATION - PUT endpoint
         
         // First create a book
-        Book originalBook = new Book(null, "Original Title", "Original Author", "123456789", 2020, "Original");
-        ResponseEntity<Book> createResponse = restTemplate.postForEntity("/books", originalBook, Book.class);
+        BookDto originalBook = new BookDto(null, "Original Title", "Original Author", "123456789", 2020, "Original", null);
+        ResponseEntity<BookDto> createResponse = restTemplate.postForEntity("/books", originalBook, BookDto.class);
         Long bookId = createResponse.getBody().getId();
         
-        // Now update the book
-        Book updatedBook = new Book(bookId, "Updated Title", "Updated Author", "123456789", 2023, "Updated");
+        // 2nd update the book
+        BookDto updatedBook = new BookDto(bookId, "Updated Title", "Updated Author", "123456789", 2023, "Updated", null);
         
-        ResponseEntity<Book> updateResponse = restTemplate.exchange(
+        ResponseEntity<BookDto> updateResponse = restTemplate.exchange(
             "/books/" + bookId, 
             HttpMethod.PUT, 
             new HttpEntity<>(updatedBook), 
-            Book.class
+            BookDto.class
         );
         
         // Verify update response
         assertEquals(HttpStatus.OK, updateResponse.getStatusCode());
-        Book responseBook = updateResponse.getBody();
+        BookDto responseBook = updateResponse.getBody();
         assertNotNull(responseBook);
         assertEquals(bookId, responseBook.getId());
         assertEquals("Updated Title", responseBook.getTitle());
@@ -165,9 +165,9 @@ class BookControllerIT {
         assertEquals("Updated", responseBook.getCategory());
         
         // Verify the book was actually updated in database
-        ResponseEntity<Book> getResponse = restTemplate.getForEntity("/books/" + bookId, Book.class);
+        ResponseEntity<BookDto> getResponse = restTemplate.getForEntity("/books/" + bookId, BookDto.class);
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
-        Book retrievedBook = getResponse.getBody();
+        BookDto retrievedBook = getResponse.getBody();
         assertEquals("Updated Title", retrievedBook.getTitle());
         assertEquals("Updated Author", retrievedBook.getAuthor());
         assertEquals("Updated", retrievedBook.getCategory());

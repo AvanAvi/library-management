@@ -1,6 +1,6 @@
 package com.attsw.library.management.integration;
 
-import com.attsw.library.management.entity.Member;
+import com.attsw.library.management.dto.MemberDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +13,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpEntity;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,12 +34,12 @@ class MemberControllerIT {
     @Test
     void testCreateMemberEndpoint() {
         // INTEGRATION VALIDATION 
-        Member memberToCreate = new Member(null, "Avan Avi", "avan.avi@email.com");
+        MemberDto memberToCreate = new MemberDto(null, "Avan Avi", "avan.avi@email.com", new ArrayList<>());
         
-        ResponseEntity<Member> response = restTemplate.postForEntity("/members", memberToCreate, Member.class);
+        ResponseEntity<MemberDto> response = restTemplate.postForEntity("/members", memberToCreate, MemberDto.class);
         
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        Member savedMember = response.getBody();
+        MemberDto savedMember = response.getBody();
         assertNotNull(savedMember);
         assertNotNull(savedMember.getId());
         assertTrue(savedMember.getId() > 0);
@@ -49,14 +50,14 @@ class MemberControllerIT {
     @Test
     void testGetMemberByIdEndpoint() {
         // INTEGRATION VALIDATION 
-        Member memberToCreate = new Member(null, "John Doe", "john.doe@email.com");
-        ResponseEntity<Member> createResponse = restTemplate.postForEntity("/members", memberToCreate, Member.class);
+        MemberDto memberToCreate = new MemberDto(null, "John Doe", "john.doe@email.com", new ArrayList<>());
+        ResponseEntity<MemberDto> createResponse = restTemplate.postForEntity("/members", memberToCreate, MemberDto.class);
         Long memberId = createResponse.getBody().getId();
         
-        ResponseEntity<Member> getResponse = restTemplate.getForEntity("/members/" + memberId, Member.class);
+        ResponseEntity<MemberDto> getResponse = restTemplate.getForEntity("/members/" + memberId, MemberDto.class);
         
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
-        Member retrievedMember = getResponse.getBody();
+        MemberDto retrievedMember = getResponse.getBody();
         assertNotNull(retrievedMember);
         assertEquals(memberId, retrievedMember.getId());
         assertEquals("John Doe", retrievedMember.getName());
@@ -67,7 +68,7 @@ class MemberControllerIT {
     void testGetMemberByIdWhenNotFound() {
         // INTEGRATION VALIDATION 
         
-        ResponseEntity<Member> response = restTemplate.getForEntity("/members/999", Member.class);
+        ResponseEntity<MemberDto> response = restTemplate.getForEntity("/members/999", MemberDto.class);
         
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -75,24 +76,24 @@ class MemberControllerIT {
     @Test
     void testGetAllMembersEndpoint() {
         // Create multiple members first
-        Member member1 = new Member(null, "Avan Avi", "avan.avi@email.com");
-        Member member2 = new Member(null, "John Doe", "john.doe@email.com");
+        MemberDto member1 = new MemberDto(null, "Avan Avi", "avan.avi@email.com", new ArrayList<>());
+        MemberDto member2 = new MemberDto(null, "John Doe", "john.doe@email.com", new ArrayList<>());
         
-        restTemplate.postForEntity("/members", member1, Member.class);
-        restTemplate.postForEntity("/members", member2, Member.class);
+        restTemplate.postForEntity("/members", member1, MemberDto.class);
+        restTemplate.postForEntity("/members", member2, MemberDto.class);
         
         // Test GET all members 
-        ResponseEntity<Member[]> response = restTemplate.getForEntity("/members", Member[].class);
+        ResponseEntity<MemberDto[]> response = restTemplate.getForEntity("/members", MemberDto[].class);
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        Member[] members = response.getBody();
+        MemberDto[] members = response.getBody();
         assertNotNull(members);
         assertEquals(2, members.length);
         
         // Verify both members are returned 
         boolean foundAvan = false;
         boolean foundJohn = false;
-        for (Member member : members) {
+        for (MemberDto member : members) {
             if ("Avan Avi".equals(member.getName())) {
                 foundAvan = true;
                 assertEquals("avan.avi@email.com", member.getEmail());
@@ -108,19 +109,19 @@ class MemberControllerIT {
     @Test
     void testDeleteMemberEndpoint() {
         // Create a member 
-        Member memberToCreate = new Member(null, "Test Member", "test@email.com");
-        ResponseEntity<Member> createResponse = restTemplate.postForEntity("/members", memberToCreate, Member.class);
+        MemberDto memberToCreate = new MemberDto(null, "Test Member", "test@email.com", new ArrayList<>());
+        ResponseEntity<MemberDto> createResponse = restTemplate.postForEntity("/members", memberToCreate, MemberDto.class);
         Long memberId = createResponse.getBody().getId();
         
         // Verify member exists
-        ResponseEntity<Member> getResponse = restTemplate.getForEntity("/members/" + memberId, Member.class);
+        ResponseEntity<MemberDto> getResponse = restTemplate.getForEntity("/members/" + memberId, MemberDto.class);
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         
         // Delete the member 
         restTemplate.delete("/members/" + memberId);
         
         
-        ResponseEntity<Member> getDeletedResponse = restTemplate.getForEntity("/members/" + memberId, Member.class);
+        ResponseEntity<MemberDto> getDeletedResponse = restTemplate.getForEntity("/members/" + memberId, MemberDto.class);
         assertEquals(HttpStatus.NOT_FOUND, getDeletedResponse.getStatusCode());
     }
     
@@ -129,32 +130,32 @@ class MemberControllerIT {
         // INTEGRATION VALIDATION - PUT endpoint
         
         // First create a member
-        Member originalMember = new Member(null, "Original Name", "original@email.com");
-        ResponseEntity<Member> createResponse = restTemplate.postForEntity("/members", originalMember, Member.class);
+        MemberDto originalMember = new MemberDto(null, "Original Name", "original@email.com", new ArrayList<>());
+        ResponseEntity<MemberDto> createResponse = restTemplate.postForEntity("/members", originalMember, MemberDto.class);
         Long memberId = createResponse.getBody().getId();
         
-        // Now update the member
-        Member updatedMember = new Member(memberId, "Updated Name", "updated@email.com");
+        // 2nd update the member
+        MemberDto updatedMember = new MemberDto(memberId, "Updated Name", "updated@email.com", new ArrayList<>());
         
-        ResponseEntity<Member> updateResponse = restTemplate.exchange(
+        ResponseEntity<MemberDto> updateResponse = restTemplate.exchange(
             "/members/" + memberId,
             HttpMethod.PUT,
             new HttpEntity<>(updatedMember),
-            Member.class
+            MemberDto.class
         );
         
         // Verify update response
         assertEquals(HttpStatus.OK, updateResponse.getStatusCode());
-        Member responseMember = updateResponse.getBody();
+        MemberDto responseMember = updateResponse.getBody();
         assertNotNull(responseMember);
         assertEquals(memberId, responseMember.getId());
         assertEquals("Updated Name", responseMember.getName());
         assertEquals("updated@email.com", responseMember.getEmail());
         
         // Verify the member was actually updated in database
-        ResponseEntity<Member> getResponse = restTemplate.getForEntity("/members/" + memberId, Member.class);
+        ResponseEntity<MemberDto> getResponse = restTemplate.getForEntity("/members/" + memberId, MemberDto.class);
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
-        Member retrievedMember = getResponse.getBody();
+        MemberDto retrievedMember = getResponse.getBody();
         assertEquals("Updated Name", retrievedMember.getName());
         assertEquals("updated@email.com", retrievedMember.getEmail());
     }

@@ -2,6 +2,7 @@ package com.attsw.library.management.unit;
 
 import com.attsw.library.management.controller.BookController;
 import com.attsw.library.management.entity.Book;
+import com.attsw.library.management.dto.BookDto;
 import com.attsw.library.management.service.BookService;
 import com.attsw.library.management.exception.BookNotFoundException; 
 import org.junit.jupiter.api.BeforeEach;
@@ -33,16 +34,20 @@ class BookControllerTest {
 
     @Test
     void testSaveBook() {
-        Book book = new Book(null, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
+        BookDto bookDto = new BookDto(null, "Clean Code", "Robert Martin", "123456789", 2008, "Programming", null);
         Book savedBook = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         
-        when(bookService.saveBook(book)).thenReturn(savedBook);
+        when(bookService.saveBook(any(Book.class))).thenReturn(savedBook);
         
-        ResponseEntity<Book> response = bookController.saveBook(book);
+        ResponseEntity<BookDto> response = bookController.saveBook(bookDto);
         
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(savedBook, response.getBody());
-        verify(bookService).saveBook(book);
+        BookDto savedBookDto = response.getBody();
+        assertNotNull(savedBookDto);
+        assertEquals(1L, savedBookDto.getId());
+        assertEquals("Clean Code", savedBookDto.getTitle());
+        assertEquals("Robert Martin", savedBookDto.getAuthor());
+        verify(bookService).saveBook(any(Book.class));
     }
     
     @Test
@@ -52,10 +57,14 @@ class BookControllerTest {
         
         when(bookService.findById(bookId)).thenReturn(book);
         
-        ResponseEntity<Book> response = bookController.findById(bookId);
+        ResponseEntity<BookDto> response = bookController.findById(bookId);
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(book, response.getBody());
+        BookDto bookDto = response.getBody();
+        assertNotNull(bookDto);
+        assertEquals(bookId, bookDto.getId());
+        assertEquals("Clean Code", bookDto.getTitle());
+        assertEquals("Robert Martin", bookDto.getAuthor());
         verify(bookService).findById(bookId);
     }
     
@@ -67,11 +76,14 @@ class BookControllerTest {
         
         when(bookService.findAll()).thenReturn(books);
         
-        ResponseEntity<List<Book>> response = bookController.findAll();
+        ResponseEntity<List<BookDto>> response = bookController.findAll();
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(books, response.getBody());
-        assertEquals(2, response.getBody().size());
+        List<BookDto> bookDtos = response.getBody();
+        assertNotNull(bookDtos);
+        assertEquals(2, bookDtos.size());
+        assertEquals("Clean Code", bookDtos.get(0).getTitle());
+        assertEquals("Effective Java", bookDtos.get(1).getTitle());
         verify(bookService).findAll();
     }
     
@@ -89,13 +101,11 @@ class BookControllerTest {
     void testFindByIdWhenNotFound() {
         Long nonExistentId = 999L;
         
-        // Mock service to throw BookNotFoundException
         when(bookService.findById(nonExistentId))
             .thenThrow(new BookNotFoundException("Book not found with id: " + nonExistentId)); 
         
-        ResponseEntity<Book> response = bookController.findById(nonExistentId);
+        ResponseEntity<BookDto> response = bookController.findById(nonExistentId);
         
-        // Assert - Verify exception handling
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertNull(response.getBody());
         verify(bookService).findById(nonExistentId);
@@ -103,19 +113,47 @@ class BookControllerTest {
     
     @Test
     void testUpdateBook() {
-        // ARRANGE
         Long bookId = 1L;
+        BookDto bookDto = new BookDto(bookId, "New Title", "New Author", "123456789", 2021, "New Category", null);
         Book updatedBook = new Book(bookId, "New Title", "New Author", "123456789", 2021, "New Category");
         
         when(bookService.saveBook(any(Book.class))).thenReturn(updatedBook);
         
-        // ACT
-        ResponseEntity<Book> response = bookController.updateBook(bookId, updatedBook);
+        ResponseEntity<BookDto> response = bookController.updateBook(bookId, bookDto);
         
-        // ASSERT
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(updatedBook, response.getBody());
-        assertEquals(bookId, response.getBody().getId());
+        BookDto updatedBookDto = response.getBody();
+        assertNotNull(updatedBookDto);
+        assertEquals(bookId, updatedBookDto.getId());
+        assertEquals("New Title", updatedBookDto.getTitle());
+        assertEquals("New Author", updatedBookDto.getAuthor());
         verify(bookService).saveBook(any(Book.class));
+    }
+    
+    @Test
+    void testFindByIdWithBorrowedByMember() {
+        
+        Long bookId = 1L;
+        Long memberId = 2L;
+        
+        // Create a member who borrowed the book
+        com.attsw.library.management.entity.Member borrower = 
+            new com.attsw.library.management.entity.Member(memberId, "John Doe", "john@email.com");
+        
+        // Create a book that is borrowed
+        Book book = new Book(bookId, "Borrowed Book", "Test Author", "123456789", 2023, "Test");
+        book.setBorrowedBy(borrower);
+        
+        when(bookService.findById(bookId)).thenReturn(book);
+        
+        ResponseEntity<BookDto> response = bookController.findById(bookId);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        BookDto bookDto = response.getBody();
+        assertNotNull(bookDto);
+        assertEquals(bookId, bookDto.getId());
+        assertEquals("Borrowed Book", bookDto.getTitle());
+        assertEquals(memberId, bookDto.getBorrowedByMemberId()); 
+        verify(bookService).findById(bookId);
     }
 }
