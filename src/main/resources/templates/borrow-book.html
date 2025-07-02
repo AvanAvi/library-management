@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borrow Book - Library Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h2 class="mb-0">Borrow Book</h2>
+                    </div>
+                    <div class="card-body">
+                        
+                        <!-- Book Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="alert alert-light border">
+                                    <h5 class="alert-heading">Book to Borrow</h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="mb-1"><strong>Title:</strong> <span th:text="${book.title}">Clean Code</span></p>
+                                            <p class="mb-1"><strong>Author:</strong> <span th:text="${book.author}">Robert Martin</span></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-1"><strong>ISBN:</strong> <span th:text="${book.isbn}">123456789</span></p>
+                                            <p class="mb-1"><strong>Category:</strong> <span th:text="${book.category ?: 'N/A'}">Programming</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Member Selection Form -->
+                        <form th:action="@{/books-web/borrow/{id}(id=${book.id})}" method="post">
+                            <div class="mb-3">
+                                <label for="memberId" class="form-label">Select Member to Borrow This Book *</label>
+                                <select class="form-select" id="memberId" name="memberId" required>
+                                    <option value="">Choose a member...</option>
+                                    <option th:each="member : ${members}" 
+                                            th:value="${member.id}" 
+                                            th:text="${member.name + ' (' + member.email + ')'}">
+                                        John Doe (john@email.com)
+                                    </option>
+                                </select>
+                                <div class="form-text">Select which library member will borrow this book.</div>
+                            </div>
+                            
+                            <!-- Empty State for No Members -->
+                            <div th:if="${#lists.isEmpty(members)}" class="alert alert-warning">
+                                <h6 class="alert-heading">No Members Available</h6>
+                                <p class="mb-2">There are no members registered in the system to borrow this book.</p>
+                                <a href="/members-web/new" class="btn btn-warning btn-sm">Add a Member First</a>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="/books-web" class="btn btn-secondary me-md-2">Cancel</a>
+                                <button type="submit" class="btn btn-info" th:disabled="${#lists.isEmpty(members)}">
+                                    Confirm Borrowing
+                                </button>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
