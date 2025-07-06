@@ -33,7 +33,7 @@ public class MemberHTMLController {
     public String showMembersPage(Model model) {
         List<Member> members = memberService.findAll();
         model.addAttribute(MEMBERS_ATTRIBUTE, members);
-        return "members";
+        return MEMBERS_ATTRIBUTE;
     }
 
     @GetMapping("/members-web/new")

@@ -38,7 +38,7 @@ public class BookHTMLController {
         model.addAttribute(BOOKS_ATTRIBUTE, books);
         
         // Return view name (books.html template)
-        return "books";
+        return BOOKS_ATTRIBUTE;
     }
 
     @GetMapping("/books-web/new")
