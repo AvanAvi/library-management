@@ -31,11 +31,6 @@
 			**/entity/*.java,
 			**/dto/*.java
 		</sonar.exclusions>
-		<!-- 🚨 CRITICAL CHANGE: REMOVE THESE LINES TO MATCH MR T/S BEHAVIOR -->
-		<!-- <sonar.sources>src/main/java</sonar.sources> -->
-		<!-- <sonar.tests>src/test/java</sonar.tests> -->
-		<!-- 🚨 REMOVE THESE TO MAKE SONARCLOUD AUTO-DISCOVER ALL JAVA FILES -->
-		<!-- <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin> -->
 		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 	
