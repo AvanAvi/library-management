@@ -88,7 +88,6 @@ public class BookBorrowingSteps {
 
     @Then("I should get the availability status")
     public void i_should_get_the_availability_status() {
-        assertNotNull(availabilityStatus);
         assertTrue(availabilityStatus);
     }
 }
