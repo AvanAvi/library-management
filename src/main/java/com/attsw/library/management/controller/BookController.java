@@ -60,14 +60,12 @@ public class BookController {
     
     @PutMapping("/{id}")
     public ResponseEntity<BookDto> updateBook(@PathVariable Long id, @Valid @RequestBody BookDto bookDto) {
-        bookDto.setId(id);
         Book book = convertToEntity(bookDto);
-        Book updatedBook = bookService.saveBook(book);
+        Book updatedBook = bookService.updateBook(id, book);
         BookDto updatedBookDto = convertToDto(updatedBook);
         return new ResponseEntity<>(updatedBookDto, HttpStatus.OK);
     }
-    
-    // Entity to DTO conversion
+
     private BookDto convertToDto(Book book) {
         Long borrowedByMemberId = book.getBorrowedBy() != null ? book.getBorrowedBy().getId() : null;
         
@@ -81,8 +79,7 @@ public class BookController {
             borrowedByMemberId
         );
     }
-    
-    // DTO to Entity conversion
+
     private Book convertToEntity(BookDto bookDto) {
         return new Book(
             bookDto.getId(),

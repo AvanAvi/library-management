@@ -3,7 +3,6 @@ package com.attsw.library.management.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
-
 @Entity
 @Table(name = "books")
 public class Book {
@@ -32,11 +31,9 @@ public class Book {
     @JoinColumn(name = "borrowed_by_member_id")
     private Member borrowedBy;
 
-    // Default constructor
     public Book() {
     }
 
-    // Parameterized constructor
     public Book(Long id, String title, String author, String isbn, Integer publishedYear, String category) {
         this.id = id;
         this.title = title;
@@ -47,7 +44,6 @@ public class Book {
         this.borrowedBy = null; 
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

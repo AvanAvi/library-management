@@ -16,7 +16,6 @@
                     </div>
                     <div class="card-body">
                         
-                        <!-- Member Information -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <div class="alert alert-light border">
@@ -28,7 +27,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <p class="mb-1"><strong>Currently Borrowed:</strong> 
-                                                <span class="badge bg-warning text-dark" th:text="${#lists.size(member.borrowedBooks)}">2</span> books
+                                                <span class="badge bg-info text-dark">Active borrower</span>
                                             </p>
                                             <p class="mb-1"><strong>Member ID:</strong> <span th:text="${member.id}">1</span></p>
                                         </div>
@@ -37,7 +36,6 @@
                             </div>
                         </div>
                         
-                        <!-- Book Selection Form -->
                         <form th:action="@{/books-web/borrow-to/{id}(id=${member.id})}" method="post">
                             <div class="mb-3">
                                 <label for="bookId" class="form-label">Select Available Book to Borrow *</label>
@@ -52,8 +50,7 @@
                                 <div class="form-text">Only available books are shown in this list.</div>
                             </div>
                             
-                            <!-- Empty State for No Available Books -->
-                            <div th:if="${#lists.isEmpty(availableBooks)}" class="alert alert-warning">
+                            <div th:if="${availableBooks.size() == 0}" class="alert alert-warning">
                                 <h6 class="alert-heading">No Available Books</h6>
                                 <p class="mb-2">All books in the library are currently borrowed or there are no books in the system.</p>
                                 <div class="d-flex gap-2">
@@ -62,10 +59,9 @@
                                 </div>
                             </div>
                             
-                            <!-- Action Buttons -->
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <a href="/members-web" class="btn btn-secondary me-md-2">Cancel</a>
-                                <button type="submit" class="btn btn-success" th:disabled="${#lists.isEmpty(availableBooks)}">
+                                <button type="submit" class="btn btn-success" th:disabled="${availableBooks.size() == 0}">
                                     Confirm Borrowing
                                 </button>
                             </div>

@@ -117,7 +117,7 @@ class BookControllerTest {
         BookDto bookDto = new BookDto(bookId, "New Title", "New Author", "123456789", 2021, "New Category", null);
         Book updatedBook = new Book(bookId, "New Title", "New Author", "123456789", 2021, "New Category");
         
-        when(bookService.saveBook(any(Book.class))).thenReturn(updatedBook);
+        when(bookService.updateBook(eq(bookId), any(Book.class))).thenReturn(updatedBook);
         
         ResponseEntity<BookDto> response = bookController.updateBook(bookId, bookDto);
         
@@ -127,7 +127,7 @@ class BookControllerTest {
         assertEquals(bookId, updatedBookDto.getId());
         assertEquals("New Title", updatedBookDto.getTitle());
         assertEquals("New Author", updatedBookDto.getAuthor());
-        verify(bookService).saveBook(any(Book.class));
+        verify(bookService).updateBook(eq(bookId), any(Book.class));
     }
     
     @Test

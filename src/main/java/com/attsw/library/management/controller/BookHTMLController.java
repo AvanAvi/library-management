@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +27,7 @@ public class BookHTMLController {
     }
 
     @GetMapping("/books-web")
+    @Transactional(readOnly = true)
     public String showBooksPage(Model model) {
         // Get all books from service
         List<Book> books = bookService.findAll();
@@ -82,7 +83,7 @@ public class BookHTMLController {
         return REDIRECT_BOOKS_WEB;
     }
     
-    // ==================== NEW BORROWING/RETURNING METHODS (GREEN PHASE) ====================
+    
     
     @GetMapping("/books-web/borrow/{id}")
     public String showBorrowBookForm(@PathVariable Long id, Model model) {
@@ -129,6 +130,7 @@ public class BookHTMLController {
     }
     
     @GetMapping("/books-web/borrow-to/{memberId}")
+    @Transactional(readOnly = true)
     public String showBorrowToMemberForm(@PathVariable Long memberId, Model model) {
         // Get the member
         Member member = memberService.findById(memberId);

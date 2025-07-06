@@ -109,13 +109,13 @@ class BookServiceTest {
     
     @Test
     void testUpdateBook() {
-        // RED 
         Long bookId = 1L;
+        Book existingBook = new Book(bookId, "Title", "Author", "123456789", 2020, "Category");
         Book updateData = new Book(null, "Updated Title", "Updated Author", "123456789", 2023, "Updated");
         Book expectedResult = new Book(bookId, "Updated Title", "Updated Author", "123456789", 2023, "Updated");
         
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(existingBook));
         when(bookRepository.save(any(Book.class))).thenReturn(expectedResult);
-        
         
         Book result = bookService.updateBook(bookId, updateData);
         

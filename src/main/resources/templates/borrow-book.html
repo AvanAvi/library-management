@@ -16,7 +16,6 @@
                     </div>
                     <div class="card-body">
                         
-                        <!-- Book Information -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <div class="alert alert-light border">
@@ -35,7 +34,6 @@
                             </div>
                         </div>
                         
-                        <!-- Member Selection Form -->
                         <form th:action="@{/books-web/borrow/{id}(id=${book.id})}" method="post">
                             <div class="mb-3">
                                 <label for="memberId" class="form-label">Select Member to Borrow This Book *</label>
@@ -50,17 +48,15 @@
                                 <div class="form-text">Select which library member will borrow this book.</div>
                             </div>
                             
-                            <!-- Empty State for No Members -->
-                            <div th:if="${#lists.isEmpty(members)}" class="alert alert-warning">
+                            <div th:if="${members.size() == 0}" class="alert alert-warning">
                                 <h6 class="alert-heading">No Members Available</h6>
                                 <p class="mb-2">There are no members registered in the system to borrow this book.</p>
                                 <a href="/members-web/new" class="btn btn-warning btn-sm">Add a Member First</a>
                             </div>
                             
-                            <!-- Action Buttons -->
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <a href="/books-web" class="btn btn-secondary me-md-2">Cancel</a>
-                                <button type="submit" class="btn btn-info" th:disabled="${#lists.isEmpty(members)}">
+                                <button type="submit" class="btn btn-info" th:disabled="${members.size() == 0}">
                                     Confirm Borrowing
                                 </button>
                             </div>

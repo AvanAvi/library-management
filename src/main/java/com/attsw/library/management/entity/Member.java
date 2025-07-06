@@ -25,18 +25,15 @@ public class Member {
     @OneToMany(mappedBy = "borrowedBy", fetch = FetchType.LAZY)
     private List<Book> borrowedBooks = new ArrayList<>();
 
-    // Default constructor
     public Member() {
     }
 
-    // Parameterized constructor
     public Member(Long id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

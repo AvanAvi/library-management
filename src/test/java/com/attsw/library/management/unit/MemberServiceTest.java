@@ -98,4 +98,19 @@ class MemberServiceTest {
         assertEquals("Member not found with id: " + nonExistentId, exception.getMessage());
         verify(memberRepository).findById(nonExistentId);
     }
+
+    @Test
+    void testUpdateMember() {
+        Long memberId = 1L;
+        Member existingMember = new Member(memberId, "Avan Avi", "avan.avi@email.com");
+        Member updateData = new Member(null, "Updated Name", "updated@email.com");
+        Member expectedResult = new Member(memberId, "Updated Name", "updated@email.com");
+        
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(existingMember));
+        when(memberRepository.save(any(Member.class))).thenReturn(expectedResult);
+        
+        Member result = memberService.updateMember(memberId, updateData);
+        
+        assertEquals(expectedResult, result);
+    }
 }

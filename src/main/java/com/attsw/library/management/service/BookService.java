@@ -34,6 +34,7 @@ public class BookService {
     }
 
     public Book updateBook(Long id, Book updateData) {
+        findById(id);
         updateData.setId(id);
         return bookRepository.save(updateData);
     }
