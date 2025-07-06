@@ -16,6 +16,8 @@ import java.util.List;
 public class MemberHTMLController {
 
     private static final String REDIRECT_MEMBERS_WEB = "redirect:/members-web";
+    private static final String MEMBER_ATTRIBUTE = "member";
+    private static final String MEMBERS_ATTRIBUTE = "members";
     
     private final MemberService memberService;
     private final BookService bookService;
@@ -30,14 +32,14 @@ public class MemberHTMLController {
     @Transactional(readOnly = true)
     public String showMembersPage(Model model) {
         List<Member> members = memberService.findAll();
-        model.addAttribute("members", members);
+        model.addAttribute(MEMBERS_ATTRIBUTE, members);
         return "members";
     }
 
     @GetMapping("/members-web/new")
     public String showAddMemberForm(Model model) {
         Member member = new Member();
-        model.addAttribute("member", member);
+        model.addAttribute(MEMBER_ATTRIBUTE, member);
         return "add-member";
     }
     
@@ -65,7 +67,7 @@ public class MemberHTMLController {
     @GetMapping("/members-web/edit/{id}")
     public String showEditMemberForm(@PathVariable Long id, Model model) {
         Member member = memberService.findById(id);
-        model.addAttribute("member", member);
+        model.addAttribute(MEMBER_ATTRIBUTE, member);
         return "edit-member";
     }
 
@@ -84,7 +86,7 @@ public class MemberHTMLController {
         List<Book> borrowedBooks = member.getBorrowedBooks();
         int borrowedBooksCount = borrowedBooks.size(); // This triggers the lazy loading
         
-        model.addAttribute("member", member);
+        model.addAttribute(MEMBER_ATTRIBUTE, member);
         model.addAttribute("borrowedBooks", borrowedBooks);
         model.addAttribute("borrowedBooksCount", borrowedBooksCount);
         

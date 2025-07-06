@@ -16,6 +16,8 @@ import java.util.List;
 public class BookHTMLController {
 
     private static final String REDIRECT_BOOKS_WEB = "redirect:/books-web";
+    private static final String BOOK_ATTRIBUTE = "book";
+    private static final String BOOKS_ATTRIBUTE = "books";
     
     private final BookService bookService;
     private final MemberService memberService;
@@ -33,7 +35,7 @@ public class BookHTMLController {
         List<Book> books = bookService.findAll();
         
         // Add books to model for Thymeleaf template
-        model.addAttribute("books", books);
+        model.addAttribute(BOOKS_ATTRIBUTE, books);
         
         // Return view name (books.html template)
         return "books";
@@ -45,7 +47,7 @@ public class BookHTMLController {
         Book book = new Book();
         
         // Add book to model for form
-        model.addAttribute("book", book);
+        model.addAttribute(BOOK_ATTRIBUTE, book);
         
         // Return add book form view
         return "add-book";
@@ -72,7 +74,7 @@ public class BookHTMLController {
     @GetMapping("/books-web/edit/{id}")
     public String showEditBookForm(@PathVariable Long id, Model model) {
         Book book = bookService.findById(id);
-        model.addAttribute("book", book);
+        model.addAttribute(BOOK_ATTRIBUTE, book);
         return "edit-book";
     }
 
@@ -94,7 +96,7 @@ public class BookHTMLController {
         List<Member> members = memberService.findAll();
         
         // Add to model
-        model.addAttribute("book", book);
+        model.addAttribute(BOOK_ATTRIBUTE, book);
         model.addAttribute("members", members);
         
         return "borrow-book";
