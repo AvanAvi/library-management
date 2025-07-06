@@ -134,6 +134,8 @@ public class BookHTMLController {
     public String showBorrowToMemberForm(@PathVariable Long memberId, Model model) {
         // Get the member
         Member member = memberService.findById(memberId);
+        // Force initialization of lazy collection within transaction
+        member.getBorrowedBooks().size();
         
         // Get all available books
         List<Book> availableBooks = bookService.findAll().stream()

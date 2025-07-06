@@ -80,7 +80,9 @@ public class MemberHTMLController {
     @Transactional(readOnly = true)
     public String showMemberBooks(@PathVariable Long id, Model model) {
         Member member = memberService.findById(id);
+        // Force initialization of lazy collection within transaction
         List<Book> borrowedBooks = member.getBorrowedBooks();
+        borrowedBooks.size(); // This triggers the lazy loading
         
         model.addAttribute("member", member);
         model.addAttribute("borrowedBooks", borrowedBooks);
