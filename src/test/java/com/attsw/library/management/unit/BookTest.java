@@ -11,14 +11,12 @@ class BookTest {
 
     @Test
     void testBookCreation() {
-        // GREEN 
         Book book = new Book();
         assertNotNull(book);
     }
 
     @Test
     void testBookWithParameters() {
-        // GREEN 
         Book book = new Book(1L, "Clean Code", "Robert C. Martin", "978-0132350884", 2008, "Programming");
         
         assertEquals(1L, book.getId());
@@ -31,7 +29,6 @@ class BookTest {
 
     @Test
     void testBookGettersAndSetters() {
-        // GREEN 
         Book book = new Book();
         
         book.setId(2L);
@@ -49,7 +46,6 @@ class BookTest {
         assertEquals("Programming", book.getCategory());
     }
 
-    // RED
     @Test
     void testBookIsJpaEntity() {
         
@@ -62,7 +58,6 @@ class BookTest {
     
     @Test
     void testBookBorrowedByIsNullByDefault() {
-        // RED 
         Book book = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         
         assertNull(book.getBorrowedBy(), "Book should not have a borrower initially");
@@ -70,7 +65,6 @@ class BookTest {
     
     @Test
     void testBookCanSetBorrowedBy() {
-        // RED 
         Book book = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         Member member = new Member(1L, "John Doe", "john@email.com");
         
@@ -81,7 +75,6 @@ class BookTest {
     
     @Test
     void testBookIsAvailableWhenNotBorrowed() {
-        // RED 
         Book book = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         
         assertTrue(book.isAvailable(), "Book should be available when not borrowed");
@@ -89,7 +82,6 @@ class BookTest {
     
     @Test
     void testBookIsNotAvailableWhenBorrowed() {
-        // RED 
         Book book = new Book(1L, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         Member member = new Member(1L, "John Doe", "john@email.com");
         

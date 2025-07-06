@@ -18,7 +18,6 @@ class MemberRepositoryIT {
 
     @Test
     void testSaveMember() {
-        // RED 
         Member member = new Member(null, "Avan Avi", "avan.avi@email.com");
         
         Member savedMember = memberRepository.save(member);

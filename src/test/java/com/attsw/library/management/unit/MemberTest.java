@@ -10,14 +10,12 @@ class MemberTest {
 
     @Test
     void testMemberCreation() {
-        // GREEN 
         Member member = new Member();
         assertNotNull(member);
     }
 
     @Test
     void testMemberWithNameAndEmail() {
-        // GREEN 
         Member member = new Member(1L, "Avan Avi", "avan.avi@email.com");
         
         assertEquals(1L, member.getId());
@@ -27,7 +25,6 @@ class MemberTest {
 
     @Test
     void testMemberIsJpaEntity() {
-        // RED 
         Member member = new Member(1L, "Avan Avi", "avan.avi@email.com");
         
       
@@ -39,7 +36,6 @@ class MemberTest {
 
     @Test
     void testMemberHasBorrowedBooksListInitially() {
-        // RED
         Member member = new Member(1L, "John Doe", "john@email.com");
         
         java.util.List<com.attsw.library.management.entity.Book> borrowedBooks = member.getBorrowedBooks();

@@ -18,7 +18,6 @@ class BookRepositoryIT {
 
     @Test
     void testSaveBook() {
-        // RED - This test will fail because BookRepository doesn't exist yet
         Book book = new Book(null, "Clean Code", "Robert Martin", "123456789", 2008, "Programming");
         
         Book savedBook = bookRepository.save(book);

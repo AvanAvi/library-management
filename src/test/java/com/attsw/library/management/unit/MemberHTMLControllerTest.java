@@ -72,7 +72,6 @@ class MemberHTMLControllerTest {
     
     @Test
     void testSaveMember() throws Exception {
-        // RED: Test for saving member via web form
         Member savedMember = new Member(1L, "John Doe", "john.doe@email.com");
         
         when(memberService.saveMember(any(Member.class))).thenReturn(savedMember);
@@ -106,13 +105,11 @@ class MemberHTMLControllerTest {
     
     @Test
     void testShowEditMemberForm() throws Exception {
-        // ARRANGE
         Long memberId = 1L;
         Member member = new Member(memberId, "Test Member", "test@email.com");
         
         when(memberService.findById(memberId)).thenReturn(member);
         
-        // ACT & ASSERT
         mockMvc.perform(get("/members-web/edit/{id}", memberId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("edit-member"))
@@ -124,13 +121,11 @@ class MemberHTMLControllerTest {
 
     @Test
     void testUpdateMemberForm() throws Exception {
-        // ARRANGE
         Long memberId = 1L;
         Member savedMember = new Member(memberId, "Updated Member", "updated@email.com");
         
         when(memberService.saveMember(any(Member.class))).thenReturn(savedMember);
         
-        // ACT & ASSERT
         mockMvc.perform(post("/members-web/update/{id}", memberId)
                 .param("name", "Updated Member")
                 .param("email", "updated@email.com"))
@@ -167,7 +162,6 @@ class MemberHTMLControllerTest {
     
     @Test
     void testShowMemberBooks() throws Exception {
-        // RED
         Long memberId = 1L;
         Member member = new Member(memberId, "John Doe", "john@email.com");
         List<Book> borrowedBooks = Arrays.asList(
@@ -191,7 +185,6 @@ class MemberHTMLControllerTest {
 
     @Test
     void testReturnBookFromMember() throws Exception {
-        // RED
         Long memberId = 1L;
         Long bookId = 2L;
         Member member = new Member(memberId, "John Doe", "john@email.com");
