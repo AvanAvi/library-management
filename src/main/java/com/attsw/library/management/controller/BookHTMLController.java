@@ -135,7 +135,7 @@ public class BookHTMLController {
         // Get the member
         Member member = memberService.findById(memberId);
         // Force initialization of lazy collection within transaction
-        member.getBorrowedBooks().size();
+        int borrowedBooksCount = member.getBorrowedBooks().size();
         
         // Get all available books
         List<Book> availableBooks = bookService.findAll().stream()
@@ -145,6 +145,7 @@ public class BookHTMLController {
         // Add to model
         model.addAttribute("member", member);
         model.addAttribute("availableBooks", availableBooks);
+        model.addAttribute("borrowedBooksCount", borrowedBooksCount);
         
         return "borrow-to-member";
     }

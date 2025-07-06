@@ -82,10 +82,11 @@ public class MemberHTMLController {
         Member member = memberService.findById(id);
         // Force initialization of lazy collection within transaction
         List<Book> borrowedBooks = member.getBorrowedBooks();
-        borrowedBooks.size(); // This triggers the lazy loading
+        int borrowedBooksCount = borrowedBooks.size(); // This triggers the lazy loading
         
         model.addAttribute("member", member);
         model.addAttribute("borrowedBooks", borrowedBooks);
+        model.addAttribute("borrowedBooksCount", borrowedBooksCount);
         
         return "member-books";
     }
