@@ -112,5 +112,6 @@ class MemberServiceTest {
         Member result = memberService.updateMember(memberId, updateData);
         
         assertEquals(expectedResult, result);
+        assertEquals(memberId, updateData.getId());
     }
 }

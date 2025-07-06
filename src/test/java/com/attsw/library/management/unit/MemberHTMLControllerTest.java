@@ -21,6 +21,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.ArgumentMatchers.any;
+import org.mockito.ArgumentCaptor;
 
 @ExtendWith(MockitoExtension.class)
 class MemberHTMLControllerTest {
@@ -136,7 +137,32 @@ class MemberHTMLControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/members-web"));
         
-        verify(memberService).saveMember(any(Member.class));
+        ArgumentCaptor<Member> memberCaptor = ArgumentCaptor.forClass(Member.class);
+        verify(memberService).saveMember(memberCaptor.capture());
+        Member capturedMember = memberCaptor.getValue();
+        assertEquals(memberId, capturedMember.getId());
+    }
+    
+    @Test
+    void testUpdateMemberSetIdCall() {
+        // Direct test of the controller method to verify setId behavior
+        Long pathId = 99L;
+        Member testMember = new Member();
+        // Member starts with null ID
+        assertNull(testMember.getId());
+        
+        when(memberService.saveMember(any(Member.class))).thenReturn(testMember);
+        
+        // Call the controller method directly
+        String result = memberHTMLController.updateMember(pathId, testMember);
+        
+        // Verify the behavior
+        assertEquals("redirect:/members-web", result);
+        verify(memberService).saveMember(testMember);
+        
+        // Critical: the member must have the ID set
+        // This will fail if setId(id) is removed by mutant
+        assertEquals(pathId, testMember.getId());
     }
     
     @Test
@@ -181,7 +207,7 @@ class MemberHTMLControllerTest {
         
         verify(bookService).findById(bookId);
         verify(bookService).saveBook(book);
-        
+        assertNull(book.getBorrowedBy());
     }
 
     @Test
@@ -204,5 +230,7 @@ class MemberHTMLControllerTest {
         verify(memberService).findById(memberId);
         verify(bookService, times(2)).saveBook(any(Book.class)); 
         verify(memberService).deleteMember(memberId);
+        assertNull(book1.getBorrowedBy());
+        assertNull(book2.getBorrowedBy());
     }
 }

@@ -120,5 +120,6 @@ class BookServiceTest {
         Book result = bookService.updateBook(bookId, updateData);
         
         assertEquals(expectedResult, result);
+        assertEquals(bookId, updateData.getId());
     }
 }

@@ -114,7 +114,7 @@ class MemberControllerTest {
     @Test
     void testUpdateMember() {
         Long memberId = 1L;
-        MemberDto memberDto = new MemberDto(memberId, "New Name", "new@email.com", new ArrayList<>());
+        MemberDto memberDto = new MemberDto(null, "New Name", "new@email.com", new ArrayList<>());
         Member updatedMember = new Member(memberId, "New Name", "new@email.com");
         
         when(memberService.saveMember(any(Member.class))).thenReturn(updatedMember);
@@ -127,6 +127,7 @@ class MemberControllerTest {
         assertEquals(memberId, updatedMemberDto.getId());
         assertEquals("New Name", updatedMemberDto.getName());
         assertEquals("new@email.com", updatedMemberDto.getEmail());
+        assertEquals(memberId, memberDto.getId());
         verify(memberService).saveMember(any(Member.class));
     }
     

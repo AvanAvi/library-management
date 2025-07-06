@@ -16,9 +16,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;  // ADD THIS IMPORT
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.spy;
+import org.mockito.ArgumentCaptor;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -137,7 +139,32 @@ class BookHTMLControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/books-web"));
         
-        verify(bookService).saveBook(any(Book.class));
+        ArgumentCaptor<Book> bookCaptor = ArgumentCaptor.forClass(Book.class);
+        verify(bookService).saveBook(bookCaptor.capture());
+        Book capturedBook = bookCaptor.getValue();
+        assertEquals(bookId, capturedBook.getId());
+    }
+    
+    @Test
+    void testUpdateBookSetIdCall() {
+        // Direct test of the controller method to verify setId behavior
+        Long pathId = 42L;
+        Book testBook = new Book();
+        // Book starts with null ID
+        assertNull(testBook.getId());
+        
+        when(bookService.saveBook(any(Book.class))).thenReturn(testBook);
+        
+        // Call the controller method directly
+        String result = bookHTMLController.updateBook(pathId, testBook);
+        
+        // Verify the behavior
+        assertEquals("redirect:/books-web", result);
+        verify(bookService).saveBook(testBook);
+        
+        // Critical: the book must have the ID set
+        // This will fail if setId(id) is removed by mutant
+        assertEquals(pathId, testBook.getId());
     }
     
     @Test
@@ -185,6 +212,7 @@ class BookHTMLControllerTest {
         verify(bookService).findById(bookId);
         verify(memberService).findById(memberId);
         verify(bookService).saveBook(book);
+        assertEquals(member, book.getBorrowedBy());
     }
 
     @Test
@@ -252,5 +280,6 @@ class BookHTMLControllerTest {
         verify(memberService).findById(memberId);
         verify(bookService).findById(bookId);
         verify(bookService).saveBook(book);
+        assertEquals(member, book.getBorrowedBy());
     }
 }
