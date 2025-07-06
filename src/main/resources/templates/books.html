@@ -36,7 +36,6 @@
                                             <th>Year</th>
                                             <th>Category</th>
                                             <th>Status</th>
-                                            <th>Borrowed By</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -52,11 +51,6 @@
                                             <td>
                                                 <span th:if="${book.available}" class="badge bg-success">Available</span>
                                                 <span th:if="${!book.available}" class="badge bg-warning text-dark">Borrowed</span>
-                                            </td>
-                                            
-                                            <td>
-                                                <span th:if="${!book.available}" class="text-warning fw-bold">Borrowed</span>
-                                                <span th:if="${book.available}" class="text-muted">—</span>
                                             </td>
                                             
                                             <td>
