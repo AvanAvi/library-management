@@ -24,27 +24,19 @@ Library Management System is a web application built using Java 17, Maven, and S
 
 ### Local Development
 ```bash
-git clone https://github.com/AvanAvi/library-management.git
-cd library-management
 ./mvnw spring-boot:run
 ```
 Access at: http://localhost:8081
 
 ### Docker
 ```bash
-git clone https://github.com/AvanAvi/library-management.git
-cd library-management
 ./mvnw clean package -DskipTests
-docker-compose up -d
+docker-compose up
 ```
 Access at: http://localhost:8080
 
 ## Testing
 
 ```bash
-# Run all tests
 ./mvnw clean verify
-
-# Unit tests only
-./mvnw test
 ```
