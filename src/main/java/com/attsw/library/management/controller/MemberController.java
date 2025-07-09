@@ -68,7 +68,6 @@ public class MemberController {
         return new ResponseEntity<>(updatedMemberDto, HttpStatus.OK);
     }
     
-    // Entity to DTO conversion
     private MemberDto convertToDto(Member member) {
         List<Long> borrowedBookIds = member.getBorrowedBooks().stream()
                 .map(Book::getId)
@@ -82,7 +81,6 @@ public class MemberController {
         );
     }
     
-    // DTO to Entity conversion
     private Member convertToEntity(MemberDto memberDto) {
         return new Member(
             memberDto.getId(),

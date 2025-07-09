@@ -60,15 +60,12 @@ class MemberWebUITest {
             By.xpath("//a[@href='/members-web' and contains(text(), 'Manage Members')]")));
         manageMembersButton.click();
         
-        // Verify we're on members page
         wait.until(ExpectedConditions.urlContains("/members-web"));
         
-        // Verify members page content
         WebElement membersHeading = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//h2[contains(text(), 'Member Management')]")));
         assertTrue(membersHeading.isDisplayed());
         
-        // Verify "Add New Member" button is present
         WebElement addMemberButton = driver.findElement(
             By.xpath("//a[@href='/members-web/new' and contains(text(), 'Add New Member')]"));
         assertTrue(addMemberButton.isDisplayed());
@@ -83,17 +80,14 @@ class MemberWebUITest {
         wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//h2[contains(text(), 'Member Management')]")));
         
-        // Verify empty state message
         WebElement emptyMessage = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//h4[contains(text(), 'No Members Found')]")));
         assertTrue(emptyMessage.isDisplayed());
         
-        // Verify empty state description
         WebElement emptyDescription = driver.findElement(
             By.xpath("//p[contains(text(), 'Your member directory is empty.')]"));
         assertTrue(emptyDescription.isDisplayed());
         
-        // Verify "Add Your First Member" button
         WebElement addFirstMemberButton = driver.findElement(
             By.xpath("//a[@href='/members-web/new' and contains(text(), 'Add Your First Member')]"));
         assertTrue(addFirstMemberButton.isDisplayed());
@@ -109,10 +103,8 @@ class MemberWebUITest {
             By.xpath("//a[@href='/members-web/new']")));
         addMemberButton.click();
         
-        // Verify we're on add member page
         wait.until(ExpectedConditions.urlContains("/members-web/new"));
         
-        // Verify add member form elements
         WebElement nameField = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("name")));
         WebElement emailField = driver.findElement(By.id("email"));
         
@@ -124,16 +116,13 @@ class MemberWebUITest {
         WebElement submitButton = driver.findElement(By.xpath("//button[@type='submit' and contains(text(), 'Save Member')]"));
         submitButton.click();
         
-        // Verify redirect to members list
         wait.until(ExpectedConditions.urlContains("/members-web"));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/new")));
         
-        // Verify the member appears in the list
         WebElement memberName = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//td[contains(text(), 'Test Member Name')]")));
         assertTrue(memberName.isDisplayed());
         
-        // Verify email is displayed
         WebElement memberEmail = driver.findElement(By.xpath("//td[contains(text(), 'test.member@email.com')]"));
         assertTrue(memberEmail.isDisplayed());
     }
@@ -158,10 +147,8 @@ class MemberWebUITest {
             By.xpath("//a[contains(@href, '/members-web/edit/') and contains(text(), 'Edit')]")));
         editButton.click();
         
-        // Verify we're on edit page
         wait.until(ExpectedConditions.urlContains("/members-web/edit/"));
         
-        // Verify form is pre-filled
         WebElement nameField = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("name")));
         assertEquals("Original Member", nameField.getAttribute("value"));
         
@@ -180,11 +167,9 @@ class MemberWebUITest {
             By.xpath("//button[@type='submit' and contains(text(), 'Update Member')]"));
         updateButton.click();
         
-        // Verify redirect to members list
         wait.until(ExpectedConditions.urlContains("/members-web"));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/edit")));
         
-        // Verify updated member appears in list
         WebElement updatedName = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//td[contains(text(), 'Updated Member')]")));
         assertTrue(updatedName.isDisplayed());
@@ -208,7 +193,6 @@ class MemberWebUITest {
         wait.until(ExpectedConditions.urlContains("/members-web"));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/new")));
         
-        // Verify member is in the list
         WebElement memberToDelete = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//td[contains(text(), 'Member to Delete')]")));
         assertTrue(memberToDelete.isDisplayed());
@@ -225,7 +209,6 @@ class MemberWebUITest {
         // Verify redirect back to members list and member is removed
         wait.until(ExpectedConditions.urlContains("/members-web"));
         
-        // Verify member is no longer in the list (should show empty state)
         WebElement emptyMessage = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//h4[contains(text(), 'No Members Found')]")));
         assertTrue(emptyMessage.isDisplayed());
@@ -240,7 +223,6 @@ class MemberWebUITest {
             By.xpath("//a[@href='/members-web' and contains(text(), 'Cancel')]")));
         cancelButton.click();
         
-        // Verify redirect to members list
         wait.until(ExpectedConditions.urlContains("/members-web"));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/new")));
         
@@ -250,14 +232,11 @@ class MemberWebUITest {
         WebElement nameField = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("name")));
         WebElement emailField = driver.findElement(By.id("email"));
         
-        // Verify required fields have required attribute
         assertNotNull(nameField.getAttribute("required"));
         assertNotNull(emailField.getAttribute("required"));
         
-        // Verify email field has email type
         assertEquals("email", emailField.getAttribute("type"));
         
-        // Verify form labels
         WebElement nameLabel = driver.findElement(By.xpath("//label[@for='name']"));
         WebElement emailLabel = driver.findElement(By.xpath("//label[@for='email']"));
         
@@ -285,10 +264,8 @@ class MemberWebUITest {
             By.xpath("//a[contains(@href, '/members-web/edit/') and contains(text(), 'Edit')]")));
         editButton.click();
         
-        // Verify we're on edit page
         wait.until(ExpectedConditions.urlContains("/members-web/edit/"));
         
-        // Verify all form fields are pre-populated correctly
         WebElement nameField = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("name")));
         WebElement emailField = driver.findElement(By.id("email"));
         
@@ -300,11 +277,9 @@ class MemberWebUITest {
             By.xpath("//a[@href='/members-web' and contains(text(), 'Cancel')]"));
         cancelButton.click();
         
-        // Verify redirect to members list without changes
         wait.until(ExpectedConditions.urlContains("/members-web"));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/edit")));
         
-        // Verify original member data is still there (unchanged)
         WebElement originalName = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//td[contains(text(), 'Test Form Member')]")));
         assertTrue(originalName.isDisplayed());

@@ -90,7 +90,6 @@ class MemberHTMLControllerTest {
        
         Long memberId = 1L;
         Member member = new Member(memberId, "John Doe", "john@email.com");
-        // Member has no borrowed books (empty list by default)
         
         when(memberService.findById(memberId)).thenReturn(member);
         
@@ -140,18 +139,14 @@ class MemberHTMLControllerTest {
     
     @Test
     void testUpdateMemberSetIdCall() {
-        // Direct test of the controller method to verify setId behavior
         Long pathId = 99L;
         Member testMember = new Member();
-        // Member starts with null ID
         assertNull(testMember.getId());
         
         when(memberService.saveMember(any(Member.class))).thenReturn(testMember);
         
-        // Call the controller method directly
         String result = memberHTMLController.updateMember(pathId, testMember);
         
-        // Verify the behavior
         assertEquals("redirect:/members-web", result);
         verify(memberService).saveMember(testMember);
         
@@ -189,7 +184,7 @@ class MemberHTMLControllerTest {
         Long bookId = 2L;
         Member member = new Member(memberId, "John Doe", "john@email.com");
         Book book = new Book(bookId, "Test Book", "Test Author", "123456789", 2023, "Test");
-        book.setBorrowedBy(member); // Initially borrowed by this member
+        book.setBorrowedBy(member);
         
         when(bookService.findById(bookId)).thenReturn(book);
         when(bookService.saveBook(any(Book.class))).thenReturn(book);

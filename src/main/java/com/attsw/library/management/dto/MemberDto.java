@@ -16,22 +16,17 @@ public class MemberDto {
     @Email(message = "Email should be valid")
     private String email;
     
-    // Relationship as List of IDs instead of full Book objects
     private List<Long> borrowedBookIds = new ArrayList<>();
 
-    // Default constructor
     public MemberDto() {
     }
 
-    // Full constructor
     public MemberDto(Long id, String name, String email, List<Long> borrowedBookIds) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.borrowedBookIds = borrowedBookIds != null ? borrowedBookIds : new ArrayList<>();
     }
-
-    // Getters and Setters
     public Long getId() {
         return id;
     }

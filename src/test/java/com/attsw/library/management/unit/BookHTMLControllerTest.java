@@ -145,11 +145,9 @@ class BookHTMLControllerTest {
         
         Long pathId = 42L;
         Book testBook = new Book();
-        // Book starts with null ID
         assertNull(testBook.getId());
         
         when(bookService.saveBook(any(Book.class))).thenReturn(testBook);
-        
         
         String result = bookHTMLController.updateBook(pathId, testBook);
         

@@ -56,15 +56,12 @@ class HomePageUITest {
         // Navigate to home page
         driver.get(baseUrl + "/");
         
-        // Verify page title
         assertEquals("Library Management System", driver.getTitle());
         
-        // Verify main heading
         WebElement heading = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//h1[contains(text(), 'Library Management System')]")));
         assertTrue(heading.isDisplayed());
         
-        // Verify welcome message
         WebElement welcomeText = driver.findElement(By.className("lead"));
         assertEquals("Welcome to the Library Management System", welcomeText.getText());
     }
@@ -79,11 +76,9 @@ class HomePageUITest {
             By.xpath("//a[@href='/books-web' and contains(text(), 'Manage Books')]")));
         manageBooksButton.click();
         
-        // Verify navigation to books page
         wait.until(ExpectedConditions.urlContains("/books-web"));
         assertTrue(driver.getCurrentUrl().contains("/books-web"));
         
-        // Verify books page loaded
         WebElement booksHeading = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//h2[contains(text(), 'Book Management')]")));
         assertTrue(booksHeading.isDisplayed());
@@ -99,11 +94,9 @@ class HomePageUITest {
             By.xpath("//a[@href='/members-web' and contains(text(), 'Manage Members')]")));
         manageMembersButton.click();
         
-        // Verify navigation to members page
         wait.until(ExpectedConditions.urlContains("/members-web"));
         assertTrue(driver.getCurrentUrl().contains("/members-web"));
         
-        // Verify members page loaded
         WebElement membersHeading = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//h2[contains(text(), 'Member Management')]")));
         assertTrue(membersHeading.isDisplayed());
@@ -127,10 +120,8 @@ class HomePageUITest {
             By.xpath("//a[@href='/' and contains(text(), 'Home')]")));
         homeButton.click();
         
-        // Verify back to home page
         wait.until(ExpectedConditions.urlMatches(".*:"+port+"/$"));
         
-        // Verify home page content is loaded
         WebElement heading = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//h1[contains(text(), 'Library Management System')]")));
         assertTrue(heading.isDisplayed());
@@ -154,10 +145,8 @@ class HomePageUITest {
             By.xpath("//a[@href='/' and contains(text(), 'Home')]")));
         homeButton.click();
         
-        // Verify back to home page
         wait.until(ExpectedConditions.urlMatches(".*:"+port+"/$"));
         
-        // Verify home page content is loaded
         WebElement heading = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//h1[contains(text(), 'Library Management System')]")));
         assertTrue(heading.isDisplayed());
@@ -168,12 +157,10 @@ class HomePageUITest {
         // Navigate to home page
         driver.get(baseUrl + "/");
         
-        // Verify card structure
         WebElement mainCard = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.className("card")));
         assertTrue(mainCard.isDisplayed());
         
-        // Verify both management cards are present
         WebElement booksCard = driver.findElement(
             By.xpath("//div[@class='card-body']//h5[contains(text(), 'Books')]"));
         assertTrue(booksCard.isDisplayed());
@@ -182,7 +169,6 @@ class HomePageUITest {
             By.xpath("//div[@class='card-body']//h5[contains(text(), 'Members')]"));
         assertTrue(membersCard.isDisplayed());
         
-        // Verify card descriptions
         WebElement booksDescription = driver.findElement(
             By.xpath("//p[contains(text(), 'Manage your book collection')]"));
         assertTrue(booksDescription.isDisplayed());

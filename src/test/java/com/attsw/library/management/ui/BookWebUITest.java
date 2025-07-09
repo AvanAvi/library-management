@@ -59,15 +59,12 @@ class BookWebUITest {
             By.xpath("//a[@href='/books-web' and contains(text(), 'Manage Books')]")));
         manageBooksButton.click();
         
-        // Verify we're on books page
         wait.until(ExpectedConditions.urlContains("/books-web"));
         
-        // Verify books page content
         WebElement booksHeading = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//h2[contains(text(), 'Book Management')]")));
         assertTrue(booksHeading.isDisplayed());
         
-        // Verify "Add New Book" button is present
         WebElement addBookButton = driver.findElement(
             By.xpath("//a[@href='/books-web/new' and contains(text(), 'Add New Book')]"));
         assertTrue(addBookButton.isDisplayed());
@@ -82,17 +79,15 @@ class BookWebUITest {
         wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//h2[contains(text(), 'Book Management')]")));
         
-        // Verify empty state message
+
         WebElement emptyMessage = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//h4[contains(text(), 'No Books Found')]")));
         assertTrue(emptyMessage.isDisplayed());
         
-        // Verify empty state description
         WebElement emptyDescription = driver.findElement(
             By.xpath("//p[contains(text(), 'Your library collection is empty.')]"));
         assertTrue(emptyDescription.isDisplayed());
         
-        // Verify "Add Your First Book" button
         WebElement addFirstBookButton = driver.findElement(
             By.xpath("//a[@href='/books-web/new' and contains(text(), 'Add Your First Book')]"));
         assertTrue(addFirstBookButton.isDisplayed());
@@ -108,10 +103,8 @@ class BookWebUITest {
             By.xpath("//a[@href='/books-web/new']")));
         addBookButton.click();
         
-        // Verify we're on add book page
         wait.until(ExpectedConditions.urlContains("/books-web/new"));
         
-        // Verify add book form elements
         WebElement titleField = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("title")));
         WebElement authorField = driver.findElement(By.id("author"));
         WebElement isbnField = driver.findElement(By.id("isbn"));
@@ -129,16 +122,13 @@ class BookWebUITest {
         WebElement submitButton = driver.findElement(By.xpath("//button[@type='submit' and contains(text(), 'Save Book')]"));
         submitButton.click();
         
-        // Verify redirect to books list
         wait.until(ExpectedConditions.urlContains("/books-web"));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/new")));
         
-        // Verify the book appears in the list
         WebElement bookTitle = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//td[contains(text(), 'Test Book Title')]")));
         assertTrue(bookTitle.isDisplayed());
         
-        // Verify other book details are displayed
         WebElement bookAuthor = driver.findElement(By.xpath("//td[contains(text(), 'Test Author')]"));
         WebElement bookIsbn = driver.findElement(By.xpath("//td[contains(text(), 'TEST-123456789')]"));
         assertTrue(bookAuthor.isDisplayed());
@@ -168,10 +158,8 @@ class BookWebUITest {
             By.xpath("//a[contains(@href, '/books-web/edit/') and contains(text(), 'Edit')]")));
         editButton.click();
         
-        // Verify we're on edit page
         wait.until(ExpectedConditions.urlContains("/books-web/edit/"));
         
-        // Verify form is pre-filled
         WebElement titleField = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("title")));
         assertEquals("Original Title", titleField.getAttribute("value"));
         
@@ -188,11 +176,9 @@ class BookWebUITest {
             By.xpath("//button[@type='submit' and contains(text(), 'Update Book')]"));
         updateButton.click();
         
-        // Verify redirect to books list
         wait.until(ExpectedConditions.urlContains("/books-web"));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/edit")));
         
-        // Verify updated book appears in list
         WebElement updatedTitle = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//td[contains(text(), 'Updated Title')]")));
         assertTrue(updatedTitle.isDisplayed());
@@ -219,7 +205,6 @@ class BookWebUITest {
         wait.until(ExpectedConditions.urlContains("/books-web"));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/new")));
         
-        // Verify book is in the list
         WebElement bookToDelete = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//td[contains(text(), 'Book to Delete')]")));
         assertTrue(bookToDelete.isDisplayed());
@@ -233,10 +218,8 @@ class BookWebUITest {
         wait.until(ExpectedConditions.alertIsPresent());
         driver.switchTo().alert().accept();
         
-        // Verify redirect back to books list and book is removed
         wait.until(ExpectedConditions.urlContains("/books-web"));
         
-        // Verify book is no longer in the list (should show empty state)
         WebElement emptyMessage = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//h4[contains(text(), 'No Books Found')]")));
         assertTrue(emptyMessage.isDisplayed());
@@ -251,7 +234,6 @@ class BookWebUITest {
             By.xpath("//a[@href='/books-web' and contains(text(), 'Cancel')]")));
         cancelButton.click();
         
-        // Verify redirect to books list
         wait.until(ExpectedConditions.urlContains("/books-web"));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/new")));
         
@@ -262,12 +244,10 @@ class BookWebUITest {
         WebElement authorField = driver.findElement(By.id("author"));
         WebElement isbnField = driver.findElement(By.id("isbn"));
         
-        // Verify required fields have required attribute
         assertNotNull(titleField.getAttribute("required"));
         assertNotNull(authorField.getAttribute("required"));
         assertNotNull(isbnField.getAttribute("required"));
         
-        // Verify form labels
         WebElement titleLabel = driver.findElement(By.xpath("//label[@for='title']"));
         WebElement authorLabel = driver.findElement(By.xpath("//label[@for='author']"));
         WebElement isbnLabel = driver.findElement(By.xpath("//label[@for='isbn']"));
@@ -300,10 +280,8 @@ class BookWebUITest {
             By.xpath("//a[contains(@href, '/books-web/edit/') and contains(text(), 'Edit')]")));
         editButton.click();
         
-        // Verify we're on edit page
         wait.until(ExpectedConditions.urlContains("/books-web/edit/"));
         
-        // Verify all form fields are pre-populated correctly
         WebElement titleField = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("title")));
         WebElement authorField = driver.findElement(By.id("author"));
         WebElement isbnField = driver.findElement(By.id("isbn"));
@@ -321,11 +299,9 @@ class BookWebUITest {
             By.xpath("//a[@href='/books-web' and contains(text(), 'Cancel')]"));
         cancelButton.click();
         
-        // Verify redirect to books list without changes
         wait.until(ExpectedConditions.urlContains("/books-web"));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/edit")));
         
-        // Verify original book data is still there (unchanged)
         WebElement originalTitle = wait.until(ExpectedConditions.presenceOfElementLocated(
             By.xpath("//td[contains(text(), 'Test Form Book')]")));
         assertTrue(originalTitle.isDisplayed());

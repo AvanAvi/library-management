@@ -19,14 +19,11 @@ public class BookDto {
     
     private String category;
     
-    // Relationship as ID instead of full Member object
     private Long borrowedByMemberId;
 
-    // Default constructor
     public BookDto() {
     }
 
-    // Full constructor
     public BookDto(Long id, String title, String author, String isbn, 
                    Integer publishedYear, String category, Long borrowedByMemberId) {
         this.id = id;
@@ -37,8 +34,6 @@ public class BookDto {
         this.category = category;
         this.borrowedByMemberId = borrowedByMemberId;
     }
-
-    // Getters and Setters
     public Long getId() {
         return id;
     }

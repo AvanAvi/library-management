@@ -101,7 +101,6 @@ public class BookHTMLController {
     @Transactional(readOnly = true)
     public String showBorrowToMemberForm(@PathVariable Long memberId, Model model) {
         Member member = memberService.findById(memberId);
-        // Force initialization of lazy collection within transaction
         int borrowedBooksCount = member.getBorrowedBooks().size();
         
         List<Book> availableBooks = bookService.findAll().stream()

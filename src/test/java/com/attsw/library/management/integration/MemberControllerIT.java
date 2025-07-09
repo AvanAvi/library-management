@@ -113,7 +113,6 @@ class MemberControllerIT {
         ResponseEntity<MemberDto> createResponse = restTemplate.postForEntity("/members", memberToCreate, MemberDto.class);
         Long memberId = createResponse.getBody().getId();
         
-        // Verify member exists
         ResponseEntity<MemberDto> getResponse = restTemplate.getForEntity("/members/" + memberId, MemberDto.class);
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         
@@ -144,7 +143,6 @@ class MemberControllerIT {
             MemberDto.class
         );
         
-        // Verify update response
         assertEquals(HttpStatus.OK, updateResponse.getStatusCode());
         MemberDto responseMember = updateResponse.getBody();
         assertNotNull(responseMember);
@@ -152,7 +150,6 @@ class MemberControllerIT {
         assertEquals("Updated Name", responseMember.getName());
         assertEquals("updated@email.com", responseMember.getEmail());
         
-        // Verify the member was actually updated in database
         ResponseEntity<MemberDto> getResponse = restTemplate.getForEntity("/members/" + memberId, MemberDto.class);
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         MemberDto retrievedMember = getResponse.getBody();

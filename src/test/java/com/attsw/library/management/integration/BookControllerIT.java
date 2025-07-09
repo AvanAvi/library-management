@@ -122,21 +122,18 @@ class BookControllerIT {
         ResponseEntity<BookDto> createResponse = restTemplate.postForEntity("/books", bookToCreate, BookDto.class);
         Long bookId = createResponse.getBody().getId();
         
-        // Verify book exists
         ResponseEntity<BookDto> getResponse = restTemplate.getForEntity("/books/" + bookId, BookDto.class);
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         
         // Delete the book
         restTemplate.delete("/books/" + bookId);
         
-        // Verify book is deleted (return 404)
         ResponseEntity<BookDto> getDeletedResponse = restTemplate.getForEntity("/books/" + bookId, BookDto.class);
         assertEquals(HttpStatus.NOT_FOUND, getDeletedResponse.getStatusCode());
     }
     
     @Test
     void testUpdateBookEndpoint() {
-        // INTEGRATION VALIDATION - PUT endpoint
         
         // First create a book
         BookDto originalBook = new BookDto(null, "Original Title", "Original Author", "123456789", 2020, "Original", null);
@@ -153,7 +150,6 @@ class BookControllerIT {
             BookDto.class
         );
         
-        // Verify update response
         assertEquals(HttpStatus.OK, updateResponse.getStatusCode());
         BookDto responseBook = updateResponse.getBody();
         assertNotNull(responseBook);
@@ -164,7 +160,6 @@ class BookControllerIT {
         assertEquals(2023, responseBook.getPublishedYear());
         assertEquals("Updated", responseBook.getCategory());
         
-        // Verify the book was actually updated in database
         ResponseEntity<BookDto> getResponse = restTemplate.getForEntity("/books/" + bookId, BookDto.class);
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         BookDto retrievedBook = getResponse.getBody();
