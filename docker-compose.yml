@@ -10,7 +10,7 @@ services:
       MYSQL_USER: library_user
       MYSQL_PASSWORD: library_password
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -22,7 +22,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
     ports:
-      - "8080:8080"
+      - "8090:8080"
     depends_on:
       - mysql-db
     networks:
@@ -32,7 +32,7 @@ services:
     image: oscarfonts/h2:latest
     container_name: library-h2
     ports:
-      - "8082:8082"
+      - "8092:8082"
     networks:
       - library-network
 

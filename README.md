@@ -44,7 +44,7 @@
 <p>Run the application using Docker with MySQL database:</p>
 <pre><code>./mvnw clean package -DskipTests
 docker-compose up</code></pre>
-<p>Access at: <a href="http://localhost:8080" target="_blank">http://localhost:8080</a></p>
+<p>Access at: <a href="http://localhost:8090" target="_blank">http://localhost:8090</a></p>
 
 <h2>API Endpoints</h2>
 
