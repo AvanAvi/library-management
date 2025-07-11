@@ -44,13 +44,13 @@ public class MemberManagementSteps {
 
     @Given("a member exists with ID {int}")
     public void a_member_exists_with_id(Integer id) {
-        member = new Member(Long.valueOf(id), "Test Member", "test@email.com");
+        member = new Member(null, "Test Member", "test@email.com");
         savedMember = memberService.saveMember(member);
     }
 
     @When("I search for the member by ID {int}")
     public void i_search_for_the_member_by_id(Integer id) {
-        savedMember = memberService.findById(Long.valueOf(id));
+        savedMember = memberService.findById(savedMember.getId());
     }
 
     @Then("I should receive the member details")

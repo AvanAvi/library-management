@@ -44,13 +44,13 @@ public class BookManagementSteps {
 
     @Given("a book exists with ID {int}")
     public void a_book_exists_with_id(Integer id) {
-        book = new Book(Long.valueOf(id), "Test Book", "Test Author", "123456789", 2023, "Test");
+        book = new Book(null, "Test Book", "Test Author", "123456789", 2023, "Test");
         savedBook = bookService.saveBook(book);
     }
 
     @When("I search for the book by ID {int}")
     public void i_search_for_the_book_by_id(Integer id) {
-        savedBook = bookService.findById(Long.valueOf(id));
+        savedBook = bookService.findById(savedBook.getId());
     }
 
     @Then("I should receive the book details")
@@ -81,7 +81,7 @@ public class BookManagementSteps {
 
     @When("I delete the book with ID {int}")
     public void i_delete_the_book_with_id(Integer id) {
-        bookService.deleteBook(Long.valueOf(id));
+        bookService.deleteBook(savedBook.getId());
     }
 
     @Then("the book should be removed from the library")

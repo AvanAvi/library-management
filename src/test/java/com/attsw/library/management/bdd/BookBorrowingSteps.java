@@ -29,14 +29,14 @@ public class BookBorrowingSteps {
 
     @Given("a book with ID {int} is available")
     public void a_book_with_id_is_available(Integer bookId) {
-        book = new Book(Long.valueOf(bookId), "Test Book", "Test Author", "123456789", 2023, "Test");
+        book = new Book(null, "Test Book", "Test Author", "123456789", 2023, "Test");
         book = bookService.saveBook(book);
         assertTrue(book.isAvailable());
     }
 
     @Given("a member with ID {int} exists")
     public void a_member_with_id_exists(Integer memberId) {
-        member = new Member(Long.valueOf(memberId), "Test Member", "test@email.com");
+        member = new Member(null, "Test Member", "test@email.com");
         member = memberService.saveMember(member);
     }
 
@@ -55,8 +55,8 @@ public class BookBorrowingSteps {
 
     @Given("a book with ID {int} is borrowed by member with ID {int}")
     public void a_book_with_id_is_borrowed_by_member_with_id(Integer bookId, Integer memberId) {
-        book = new Book(Long.valueOf(bookId), "Test Book", "Test Author", "123456789", 2023, "Test");
-        member = new Member(Long.valueOf(memberId), "Test Member", "test@email.com");
+        book = new Book(null, "Test Book", "Test Author", "123456789", 2023, "Test");
+        member = new Member(null, "Test Member", "test@email.com");
         
         member = memberService.saveMember(member);
         book.setBorrowedBy(member);
@@ -77,7 +77,7 @@ public class BookBorrowingSteps {
 
     @Given("a book with ID {int} exists")
     public void a_book_with_id_exists(Integer bookId) {
-        book = new Book(Long.valueOf(bookId), "Test Book", "Test Author", "123456789", 2023, "Test");
+        book = new Book(null, "Test Book", "Test Author", "123456789", 2023, "Test");
         book = bookService.saveBook(book);
     }
 

@@ -133,6 +133,13 @@
 			<scope>test</scope>
 		</dependency>
 		
+		<!-- JUnit Vintage Engine for JUnit 4 compatibility -->
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
 		<!-- Quality Tools Dependencies -->
 		<dependency>
 			<groupId>org.sonarsource.scanner.maven</groupId>
