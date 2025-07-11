@@ -9,6 +9,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: testdb
+          MYSQL_USER: testuser
+          MYSQL_PASSWORD: testpass
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
     - name: Checkout code
@@ -34,7 +46,10 @@ jobs:
       run: mvn clean test jacoco:report
     
     - name: Run integration tests
-      run: mvn failsafe:integration-test failsafe:verify -Dskip.ui.tests=true
+      run: mvn failsafe:integration-test failsafe:verify
+    
+    - name: Run BDD tests
+      run: mvn test -Pbdd-tests
     
     - name: SonarCloud Analysis
       run: mvn sonar:sonar
