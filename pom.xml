@@ -172,7 +172,7 @@
 					<excludes>
 						<exclude>**/integration/**</exclude>
 						<exclude>**/e2e/**</exclude>
-						<exclude>**/ui/**</exclude> 
+						<exclude>**/bdd/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -205,18 +205,6 @@
 								<include>**/e2e/**/*E2ETest.java</include>
 							</includes>
 						</configuration>
-					</execution>
-					<execution>
-					    <id>ui-tests</id>
-					    <goals>
-					        <goal>integration-test</goal>
-					        <goal>verify</goal>
-					    </goals>
-					    <configuration>
-					        <includes>
-					            <include>**/ui/**/*UITest.java</include>
-					        </includes>
-					    </configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -303,7 +291,7 @@
 				</executions>
 			</plugin>
 			
-			<!-- PITest (Mutation Testing) -->
+			<!-- PITest (Mutation Testing) - Unit Tests Only -->
 			<plugin>
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>
@@ -323,20 +311,22 @@
 					</targetClasses>
 					<targetTests>
 						<param>com.attsw.library.management.unit.*</param>
-						<param>com.attsw.library.management.integration.*</param>
 					</targetTests>
 					<excludedTestClasses>
+						<param>com.attsw.library.management.integration.*</param>
 						<param>com.attsw.library.management.e2e.*</param>
-						<param>com.attsw.library.management.ui.*</param> 
+						<param>com.attsw.library.management.bdd.*</param>
 					</excludedTestClasses>
 					<mutators>
 						<mutator>DEFAULTS</mutator>
 					</mutators>
 					<mutationThreshold>100</mutationThreshold>
+					<coverageThreshold>100</coverageThreshold>
 					<outputFormats>
 						<outputFormat>XML</outputFormat>
 						<outputFormat>HTML</outputFormat>
 					</outputFormats>
+					<timestampedReports>false</timestampedReports>
 				</configuration>
 			</plugin>
 			
@@ -366,10 +356,10 @@
 	<!-- Profiles for different environments -->
 	<profiles>
 		<profile>
-			<id>skip-ui-tests</id>
+			<id>skip-e2e-tests</id>
 			<activation>
 				<property>
-					<name>skip.ui.tests</name>
+					<name>skip.e2e.tests</name>
 				</property>
 			</activation>
 			<build>
@@ -379,7 +369,7 @@
 						<artifactId>maven-failsafe-plugin</artifactId>
 						<executions>
 							<execution>
-								<id>ui-tests</id>
+								<id>e2e-tests</id>
 								<phase>none</phase>
 							</execution>
 						</executions>
