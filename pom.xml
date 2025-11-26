@@ -17,21 +17,6 @@
 	
 	<properties>
 		<java.version>17</java.version>
-		<!-- SonarCloud Configuration - MODIFIED TO ANALYZE TEST CODE TOO -->
-		<sonar.projectKey>AvanAvi_library-management</sonar.projectKey>
-		<sonar.organization>avanavi</sonar.organization>
-		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<sonar.coverage.exclusions>
-			**/LibraryManagementSystemApplication.java,
-			**/entity/*.java,
-			**/dto/*.java
-		</sonar.coverage.exclusions>
-		<sonar.exclusions>
-			**/LibraryManagementSystemApplication.java,
-			**/entity/*.java,
-			**/dto/*.java
-		</sonar.exclusions>
-		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 	
 	<dependencies>
@@ -140,17 +125,6 @@
 			<scope>test</scope>
 		</dependency>
 		
-		<!-- Quality Tools Dependencies -->
-		<dependency>
-			<groupId>org.sonarsource.scanner.maven</groupId>
-			<artifactId>sonar-maven-plugin</artifactId>
-			<version>3.10.0.2594</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eluder.coveralls</groupId>
-			<artifactId>coveralls-maven-plugin</artifactId>
-			<version>4.3.0</version>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -172,7 +146,7 @@
 					<excludes>
 						<exclude>**/integration/**</exclude>
 						<exclude>**/e2e/**</exclude>
-						<exclude>**/ui/**</exclude> 
+						<exclude>**/bdd/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -205,18 +179,6 @@
 								<include>**/e2e/**/*E2ETest.java</include>
 							</includes>
 						</configuration>
-					</execution>
-					<execution>
-					    <id>ui-tests</id>
-					    <goals>
-					        <goal>integration-test</goal>
-					        <goal>verify</goal>
-					    </goals>
-					    <configuration>
-					        <includes>
-					            <include>**/ui/**/*UITest.java</include>
-					        </includes>
-					    </configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -303,7 +265,7 @@
 				</executions>
 			</plugin>
 			
-			<!-- PITest (Mutation Testing) -->
+			<!-- PITest (Mutation Testing) - Unit Tests Only -->
 			<plugin>
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>
@@ -323,41 +285,22 @@
 					</targetClasses>
 					<targetTests>
 						<param>com.attsw.library.management.unit.*</param>
-						<param>com.attsw.library.management.integration.*</param>
 					</targetTests>
 					<excludedTestClasses>
+						<param>com.attsw.library.management.integration.*</param>
 						<param>com.attsw.library.management.e2e.*</param>
-						<param>com.attsw.library.management.ui.*</param> 
+						<param>com.attsw.library.management.bdd.*</param>
 					</excludedTestClasses>
 					<mutators>
 						<mutator>DEFAULTS</mutator>
 					</mutators>
 					<mutationThreshold>100</mutationThreshold>
+					<coverageThreshold>100</coverageThreshold>
 					<outputFormats>
 						<outputFormat>XML</outputFormat>
 						<outputFormat>HTML</outputFormat>
 					</outputFormats>
-				</configuration>
-			</plugin>
-			
-			<!-- SonarCloud Plugin -->
-			<plugin>
-				<groupId>org.sonarsource.scanner.maven</groupId>
-				<artifactId>sonar-maven-plugin</artifactId>
-				<version>3.10.0.2594</version>
-			</plugin>
-			
-			<!-- Coveralls Plugin (Enhanced) -->
-			<plugin>
-				<groupId>org.eluder.coveralls</groupId>
-				<artifactId>coveralls-maven-plugin</artifactId>
-				<version>4.3.0</version>
-				<configuration>
-					<jacocoReports>
-						<!-- Use the aggregate report for complete coverage -->
-						<jacocoReport>${project.reporting.outputDirectory}/jacoco-aggregate/jacoco.xml</jacocoReport>
-					</jacocoReports>
-					<failOnServiceError>false</failOnServiceError>
+					<timestampedReports>false</timestampedReports>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -366,10 +309,10 @@
 	<!-- Profiles for different environments -->
 	<profiles>
 		<profile>
-			<id>skip-ui-tests</id>
+			<id>skip-e2e-tests</id>
 			<activation>
 				<property>
-					<name>skip.ui.tests</name>
+					<name>skip.e2e.tests</name>
 				</property>
 			</activation>
 			<build>
@@ -379,7 +322,7 @@
 						<artifactId>maven-failsafe-plugin</artifactId>
 						<executions>
 							<execution>
-								<id>ui-tests</id>
+								<id>e2e-tests</id>
 								<phase>none</phase>
 							</execution>
 						</executions>
